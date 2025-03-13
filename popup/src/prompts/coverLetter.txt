@@ -1,0 +1,29 @@
+This is my resume:
+
+Shehab Elhariry is an experienced Frontend Developer with over six years of expertise in React, Redux, and TypeScript. 
+He specializes in building user-centric web applications, integrating AI technologies, and developing data visualizations using chart libraries. 
+Currently a Senior Frontend Engineer at Incorta, Shehab played a key role in developing Incorta Copilot, an AI assistant that significantly improved efficiency in insight generation. 
+He has contributed to 30+ visualization types, mentored junior developers, and enhanced code quality through unit and integration testing. 
+With prior experience at BADR and Qowwa, Shehab worked across multiple domains, including cryptocurrency trading systems and cross-platform mobile development. 
+As an external instructor at ITI, he has also taught JavaScript ES6+ courses for three consecutive years. 
+Shehab holds a Diploma in UI Design from ITI and a Bachelor’s in Mechanical Engineering from Alexandria University. 
+His technical skills include TypeScript, JavaScript, React, Redux, Jest, Playwright, and OpenAI integrations.
+Shehab is aspiring to work and live in Europe, preferably in the Netherlands.
+
+This is the job description that I am applying for: 
+
+Company Name: {{company}}
+Company Location: {{location}}
+
+<description>
+{{description}}
+</description> 
+
+Instructions:
+
+1. Grade the job from 1 to 10 on whether it is a good opportunity for me. (10 highest)
+2. Draft a *brief* COVER LETTER that would guarante the candidate an intial interview.
+
+You should return:
+- a job match grade between <grade></grade> tags.
+- a COVER LETTER *body* between <letter></letter> tags

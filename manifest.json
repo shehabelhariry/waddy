@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Land Your Job",
+  "version": "1.0",
+  "description": "Track and manage LinkedIn job applications",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["https://www.linkedin.com/jobs/*"],
+  "background": {
+    "service_worker": "background.js"
+  },    
+  "action": {
+    "default_popup": "popup/dist/index.html",
+    "default_icon": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/jobs/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
