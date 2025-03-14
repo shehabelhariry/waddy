@@ -3,8 +3,8 @@
   "name": "Land Your Job",
   "version": "1.0",
   "description": "Track and manage LinkedIn job applications",
-  "permissions": ["activeTab", "storage"],
-  "host_permissions": ["https://www.linkedin.com/jobs/*"],
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["https://www.linkedin.com/jobs/*", "https://script.google.com/macros/s/*" ],
   "background": {
     "service_worker": "background.js"
   },    

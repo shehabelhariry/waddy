@@ -43,6 +43,7 @@ function extractJobDetails(parentElem) {
   const jobDescriptionElem = parentElem.querySelector(selectors.jobDescription);
   const companyImageElem = parentElem.querySelector(selectors.image);
   const locationElem = mainJobInfoElem.querySelector(selectors.location);
+  const jobURLElem = jobTitleElem.querySelector("a");
   const company = companyElem.innerText.trim();
 
   if (jobTitleElem && companyElem && mainJobInfoElem && jobDescriptionElem) {
@@ -54,6 +55,7 @@ function extractJobDetails(parentElem) {
       url: window.location.href,
       imageUrl: companyImageElem.getAttribute("src"),
       location: locationElem.innerText.trim(),
+      jobUrl: "https://www.linkedin.com" + jobURLElem.getAttribute("href"),
     };
 
     console.log("Extracted job data:", jobData);

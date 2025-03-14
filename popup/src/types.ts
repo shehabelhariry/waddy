@@ -4,4 +4,5 @@ export interface JobData {
   location: string;
   description: string;
   imageUrl: string;
+  jobUrl: string;
 }
