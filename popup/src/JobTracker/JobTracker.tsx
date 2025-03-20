@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { chrome } from "../const";
 import { JobData } from "../types";
 import { handleCoverLetter } from "../actions";
+import { createCVPdf } from "../download";
+import { myBaseCV } from "../baseCV";
+import { callLLM, extractTextBetweenTags, loadPrompt } from "../utils";
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [matchScore, setMatchScore] = useState(null);
-
 
   useEffect(() => {
     // Send message to content script to extract job data
@@ -55,9 +57,36 @@ const JobTracker = () => {
       <div className="button-container">
         <button
           className="ai-button"
-          onClick={() => handleCoverLetter(jobData!, setIsAiLoading, setMatchScore)}
+          onClick={() =>
+            handleCoverLetter(jobData!, setIsAiLoading, setMatchScore)
+          }
         >
-          {isAiLoading ?" Loading": "🤖 Do your AI thingy"}
+          {isAiLoading ? " Loading" : "🤖 Do your AI thingy"}
+        </button>
+        <button
+          className="ai-button"
+          onClick={async () => {
+      
+            setIsAiLoading(true);
+            const prompt = await loadPrompt("customizedResume.txt", {
+              cv: JSON.stringify(myBaseCV, null, 2),
+              job: jobData?.description!,
+            });
+          
+            const resp = await callLLM({
+              system: "you are a consultant specialized in creating CVs",
+              prompt: prompt,
+            });
+          
+            let resume: typeof myBaseCV = JSON.parse(
+              extractTextBetweenTags(resp, "new_cv") || "{}"
+            );
+          
+            createCVPdf(resume)
+            setIsAiLoading(false);
+          }}
+        >
+          {isAiLoading ? " Loading" : "Generate A CV"}
         </button>
       </div>
     </div>

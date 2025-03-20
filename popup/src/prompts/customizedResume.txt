@@ -1,0 +1,21 @@
+You are given 
+1. a JSON object representing my current CV between <cv></cv> tags
+2. a Job description between <job></job> tags
+
+Generate a tailored version of my CV that specifically addresses the job requirements and return the new JSON between <new_cv></new_cv> tags.
+
+Follow these optimization guidelines:
+1. Skills: Reorder skills based on relevance to the job description, add missing relevant skills, and remove less relevant ones
+2. Summary: Incorporate keywords from the job description and highlight specific strengths that match their requirements
+3. Experience: Emphasize and expand on relevant projects/responsibilities, quantify achievements when possible, and phrase accomplishments to mirror job requirements
+4. Education: Highlight relevant coursework or certifications that align with the position
+5. Maintain the same structure and approximate character count in each section as the original CV
+
+Important:
+- Preserve the original JSON structure exactly
+- Don't invent experiences or qualifications I don't have
+- Focus on truthful reorganization and rephrasing
+- Ensure the final output is valid JSON that can be parsed
+
+<cv>{{cv}}</cv>
+<job>{{job}}</job>

@@ -17,7 +17,7 @@ export const callLLM = async ({
         { role: "system", content: system },
         { role: "user", content: prompt },
       ],
-      max_tokens: 1000,
+      max_tokens: 5000,
     }),
   });
 
