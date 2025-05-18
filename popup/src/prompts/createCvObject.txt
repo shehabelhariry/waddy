@@ -1,0 +1,112 @@
+You are required to read the file uploaded (a CV) and convert the output into a JSON object that match the schema of the following object. 
+Take into consideration that only the sections defined are available to fill, you can ignore other sections.
+You should return the output JSON between <new_cv></new_cv> tags. 
+
+This is the sample of the JSON: 
+```
+{
+  name: John doe",
+  contact: {
+    location: "Alexandria, Egypt",
+    phone: "201276900621",
+    email: "shehab.elhariry@hotmail.com",
+    linkedin: "linkedin.com/in/shehabelhariry",
+  },
+  title: "Frontend Engineer",
+  summary:
+    "Experienced and dedicated Frontend Developer with over 6 years of experience. Proficient in React JS, Redux, and TypeScript, consistently delivering innovative, user-centric solutions. Skilled in integrating AI technologies and crafting visually compelling visualizations using chart libraries. A collaborative team player adept at mentoring junior developers and fostering an environment of continuous improvement. Seeking to leverage expertise in creating seamless, intuitive user experiences.",
+  skills: [
+    "TypeScript",
+    "React.js",
+    "Redux",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "Less",
+    "OpenAI",
+    "Jest",
+    "Playwright",
+  ],
+  experience: [
+    {
+      company: "Incorta",
+      location: "Egypt",
+      roles: [
+        {
+          title: "Senior Frontend Engineer",
+          start_date: "Apr 2022",
+          end_date: "Present",
+          responsibilities: [
+            "Built the UI of 'Incorta Copilot', an AI assistant, that helped reduce the time to build an Incorta Insight by more than 50%.",
+            "Created and maintained 30+ visualization types built using various chart libraries: highcharts, yFiles, and pure JS.",
+            "Guided and mentored a team of 2 junior developers, conducting detailed code reviews and providing constructive feedback.",
+            "Increased code quality (coverage) to 80% by writing unit tests using Jest and integration tests using Playwright.",
+            "Collaborated with cross-functional teams to ensure successful implementation of customer-centric features.",
+          ],
+        },
+        {
+          title: "Frontend Engineer",
+          start_date: "Jan 2019",
+          end_date: "Apr 2022",
+          responsibilities: [
+            "Increased customer satisfaction by implementing new interactive dashboard features in Incorta using React, Redux, and TypeScript.",
+            "Added a new Insight type 'Advanced Maps' to the Incorta product by integrating Mapbox into the project.",
+            "Implemented comprehensive integration tests for new features using react-testing-library.",
+          ],
+        },
+      ],
+    },
+    {
+      company: "BADR",
+      location: "Alexandria Governorate, Egypt",
+      roles: [
+        {
+          title: "Frontend Developer",
+          start_date: "Jul 2017",
+          end_date: "Dec 2018",
+          responsibilities: [
+            "Supported 5+ projects that varied in business domains and technologies (React.js, Vue.js, and jQuery).",
+            "Created the UI of a cryptocurrency trading system, delivering the project in less than 8 months.",
+            "Planned and executed 2 in-house websites.",
+          ],
+        },
+      ],
+    },
+    {
+      company: "Information Technology Institute (ITI)",
+      location: "Alexandria Governorate, Egypt",
+      roles: [
+        {
+          title: "External Instructor",
+          start_date: "Jul 2017",
+          end_date: "Dec 2022",
+          responsibilities: [
+            "Conducted a JavaScript ES6+ Course for 3 consecutive years.",
+          ],
+        },
+      ],
+    },
+  ],
+  education: [
+    {
+      degree: "Diploma in User Interface Design",
+      institution: "Information Technology Institute (ITI)",
+      start_date: "Jan 2016",
+      end_date: "Jan 2017",
+    },
+    {
+      degree: "Bachelor's degree in Mechanical Engineering",
+      institution: "Alexandria University",
+      start_date: "Jan 2010",
+      end_date: "Jan 2014",
+    },
+  ],
+  certifications: [
+    {
+      name: "Agile Foundation",
+      institution: "Software Engineering Competence Center-SECC",
+      date: "Jul 2018",
+    },
+  ],
+};
+```

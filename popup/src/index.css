@@ -8,10 +8,13 @@
 }
 body {
   font-family: "Arial", sans-serif;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  /* background: linear-gradient(135deg, #1a1a2e, #16213e); */
   color: #e0e0e0;
   text-align: center;
-
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
   padding: 20px;
@@ -27,11 +30,20 @@ body {
 }
 
 .ai-title {
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   color: #00f5d4;
-  text-shadow: 0 0 10px #00f5d4;
+  /* text-shadow: 0 0 10px #00f5d4; */
   margin-bottom: 30px;
+}
+
+.logo-container {
+}
+
+.logo-container img {
+  width: 300px;
+  height: 100px;
+  object-fit: cover;
 }
 
 h2,
@@ -62,21 +74,7 @@ pre {
 }
 
 .ai-button {
-  background: linear-gradient(135deg, #aa00aa, #00a5a5);
-  border: none;
-  padding: 10px 15px;
-  font-size: 1.1em;
-  font-weight: bold;
-  color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  width: 100%;
-}
-
-.ai-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 5px #00f5d4;
+  width: 200px;
 }
 
 /* card */
@@ -125,4 +123,8 @@ pre {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 5px;
   width: fit-content;
+}
+
+.ant-upload-hint {
+  /* color: white !important; */
 }

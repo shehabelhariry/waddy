@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { chrome } from "../const";
 import { JobData } from "../types";
-import { handleCoverLetter } from "../actions";
 import { createCVPdf } from "../download";
-import { myBaseCV } from "../baseCV";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../utils";
+import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
+import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
+import Dragger from "antd/es/upload/Dragger";
+import Logo from "../assets/logo_non_transparent.png";
+import { runAssistantWithFileAndMessage } from "../run";
+import { myBaseCV } from "../baseCV";
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  const [matchScore, setMatchScore] = useState(null);
+  const [cvObject, setCvObject] = useState(() => {
+    const item = localStorage.getItem("waddyCV");
+    if (item) {
+      return JSON.parse(item);
+    }
+  });
 
   useEffect(() => {
     // Send message to content script to extract job data
@@ -33,13 +42,51 @@ const JobTracker = () => {
     };
   }, []);
 
+  const props: UploadProps = {
+    name: "file",
+    multiple: true,
+    beforeUpload: () => {
+      return false;
+    },
+    async onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        setLoading(true);
+        const answer = await runAssistantWithFileAndMessage({
+          file: info.file,
+        });
+        const cv = extractTextBetweenTags(answer, "new_cv")!;
+        localStorage.setItem("waddyCV", cv);
+        let cvObj = JSON.parse(cv);
+        setCvObject(cvObj);
+        setLoading(false);
+      }
+      if (status === "done") {
+        console.log(info.file);
+        // await summarizeCV({ formData: e.dataTransfer.files[0] });
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    async onDrop(e) {
+      console.log("Dropped files", e.dataTransfer.files);
+    },
+  };
+
   return (
     <div className="popup-container">
-      <h1 className="ai-title">🚀 AI Job Tracker</h1>
+      <div className="logo-container">
+        <img
+          className="waddy-logo"
+          src={Logo}
+          alt="Waddy Job applications logo"
+        />
+      </div>
 
-      {loading ? (
-        <p>⏳ Loading job details...</p>
-      ) : (
+      {loading ? <p>⏳ Loading job details...</p> : null}
+
+      {!loading && jobData ? (
         <div className="job-card">
           <img
             src={jobData?.imageUrl}
@@ -50,44 +97,79 @@ const JobTracker = () => {
           <h3 className="company-name">{jobData?.company}</h3>
           <p className="job-location">Location: {jobData?.location}</p>
         </div>
-      )}
-
-      {matchScore !== null && <p>✅ Match Score: {matchScore} / 10</p>}
+      ) : null}
 
       <div className="button-container">
-        <button
-          className="ai-button"
-          onClick={() =>
-            handleCoverLetter(jobData!, setIsAiLoading, setMatchScore)
-          }
-        >
-          {isAiLoading ? " Loading" : "🤖 Do your AI thingy"}
-        </button>
-        <button
-          className="ai-button"
-          onClick={async () => {
-      
-            setIsAiLoading(true);
-            const prompt = await loadPrompt("customizedResume.txt", {
-              cv: JSON.stringify(myBaseCV, null, 2),
-              job: jobData?.description!,
-            });
-          
-            const resp = await callLLM({
-              system: "you are a consultant specialized in creating CVs",
-              prompt: prompt,
-            });
-          
-            let resume: typeof myBaseCV = JSON.parse(
-              extractTextBetweenTags(resp, "new_cv") || "{}"
-            );
-          
-            createCVPdf(resume)
-            setIsAiLoading(false);
-          }}
-        >
-          {isAiLoading ? " Loading" : "Generate A CV"}
-        </button>
+        {!cvObject ? (
+          <Dragger {...props}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+
+            {loading ? (
+              <Flex justify="center" align="center">
+                <Space>
+                  <Spin />
+                  <p>Preparing Your CV</p>
+                </Space>
+              </Flex>
+            ) : (
+              <>
+                <p className="ant-upload-text">Upload your CV</p>
+                <p className="ant-upload-hint">
+                  Upload your CV here to get Started and Waddy!
+                </p>
+              </>
+            )}
+          </Dragger>
+        ) : null}
+        {cvObject ? (
+          <>
+            <p>
+              {`${cvObject.name}.pdf`}{" "}
+              <DeleteFilled
+                onClick={() => {
+                  localStorage.removeItem("waddyCV");
+                  setCvObject(undefined);
+                }}
+              />
+            </p>
+            {/* <Button
+              className="ai-button"
+              loading={isAiLoading}
+              onClick={() =>
+                handleCoverLetter(jobData!, setIsAiLoading, setMatchScore)
+              }
+            >
+              Rate your CV
+            </Button> */}
+            <Button
+              className="ai-button"
+              loading={isAiLoading}
+              onClick={async () => {
+                setIsAiLoading(true);
+                const prompt = await loadPrompt("customizedResume.txt", {
+                  cv: JSON.stringify(cvObject, null, 2),
+                  job: jobData?.description!,
+                });
+
+                const resp = await callLLM({
+                  system: "you are a consultant specialized in creating CVs",
+                  prompt: prompt,
+                });
+
+                let resume: typeof myBaseCV = JSON.parse(
+                  extractTextBetweenTags(resp, "new_cv") || "{}"
+                );
+
+                createCVPdf(resume);
+                setIsAiLoading(false);
+              }}
+            >
+              Generate A Tailored CV
+            </Button>
+          </>
+        ) : null}
       </div>
     </div>
   );

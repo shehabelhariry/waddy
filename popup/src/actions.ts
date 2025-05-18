@@ -6,7 +6,6 @@ import {
   extractTextBetweenTags,
   loadPrompt,
 } from "./utils";
-import { myBaseCV } from "./baseCV";
 
 export const handleCoverLetter = async (
   jobData: JobData,
@@ -116,7 +115,7 @@ export async function generateResumePDF(
   setIsLoading(true);
 
   const prompt = await loadPrompt("customizedResume.txt", {
-    cv: JSON.stringify(myBaseCV, null, 2),
+    cv: localStorage.getItem("waddyCV")!,
     job: jobData.description,
   });
 
@@ -125,9 +124,7 @@ export async function generateResumePDF(
     prompt: prompt,
   });
 
-  let resume: typeof myBaseCV = JSON.parse(
-    extractTextBetweenTags(resp, "new_cv") || "{}"
-  );
+  let resume = JSON.parse(extractTextBetweenTags(resp, "new_cv") || "{}");
 
   //@ts-ignore
   const doc = new jsPDF({ unit: "pt", format: "A4", lineHeight: 1.5 });
@@ -265,7 +262,7 @@ export async function generateResumePDF(
 
   // Experience
   addSection("Experience");
-  resume.experience.forEach((job) => {
+  resume.experience.forEach((job: any) => {
     // Company Name
     doc
       .setFontSize(CONFIG.fonts.size.section)
@@ -275,7 +272,7 @@ export async function generateResumePDF(
     y += CONFIG.spacing.textBlock;
 
     // Roles
-    job.roles.forEach((role) => {
+    job.roles.forEach((role: any) => {
       // Role Title and Dates
       doc
         .setFontSize(CONFIG.fonts.size.text)
@@ -309,7 +306,7 @@ export async function generateResumePDF(
 
   // Education
   addSection("Education");
-  resume.education.forEach((edu) => {
+  resume.education.forEach((edu: any) => {
     doc
       .setFontSize(CONFIG.fonts.size.section)
       .setFont(CONFIG.fonts.main, "bold")
