@@ -3,8 +3,8 @@ import { chrome } from "../const";
 import { JobData } from "../types";
 import { createCVPdf } from "../download";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../utils";
-import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
-import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
+import { DeleteFilled, InboxOutlined, SettingOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, message, Space, Spin, UploadProps } from "antd"; // Added Input
 import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
 import { runAssistantWithFileAndMessage } from "../run";
@@ -14,6 +14,8 @@ const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [showOpenAiKeyInput, setShowOpenAiKeyInput] = useState(false);
+  const [apiKey, setApiKey] = useState<string>(""); // State for API Key
   const [cvObject, setCvObject] = useState(() => {
     const item = localStorage.getItem("waddyCV");
     if (item) {
@@ -37,10 +39,24 @@ const JobTracker = () => {
       }
     });
 
+    // Retrieve API key from storage on mount
+    chrome?.storage?.local.get(["openaiApiKey"], (result) => {
+      if (result.openaiApiKey) {
+        setApiKey(result.openaiApiKey);
+      }
+    });
+
     return () => {
       chrome?.runtime?.onMessage.removeListener();
     };
   }, []);
+
+  // Handler for API key input change
+  const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newApiKey = e.target.value;
+    setApiKey(newApiKey);
+    chrome?.storage?.local.set({ openaiApiKey: newApiKey });
+  };
 
   const props: UploadProps = {
     name: "file",
@@ -74,8 +90,35 @@ const JobTracker = () => {
     },
   };
 
+  // Handler for settings icon click
+  const handleSettingsClick = () => {
+    setShowOpenAiKeyInput(!showOpenAiKeyInput);
+  };
+
   return (
     <div className="popup-container">
+      <div className="settings-icon-container">
+        <SettingOutlined
+          style={{ fontSize: "24px", cursor: "pointer" }}
+          onClick={handleSettingsClick} // Attached handler
+        />
+      </div>
+
+      {/* Conditionally rendered OpenAI API Key Input */}
+      {showOpenAiKeyInput && (
+        <div className="api-key-input-container" style={{ marginBottom: "15px", width: "80%" }}>
+          <label htmlFor="apiKeyInput" style={{ display: "block", marginBottom: "5px", color: "#e0e0e0" }}>
+            OpenAI API Key:
+          </label>
+          <Input
+            id="apiKeyInput"
+            placeholder="Enter your OpenAI API Key"
+            value={apiKey}
+            onChange={handleApiKeyChange}
+          />
+        </div>
+      )}
+
       <div className="logo-container">
         <img
           className="waddy-logo"

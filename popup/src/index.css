@@ -22,11 +22,19 @@ body {
 }
 
 .popup-container {
+  position: relative; /* Added for positioning context */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+}
+
+.settings-icon-container {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
+  z-index: 10; /* Ensure it's above other elements */
 }
 
 .ai-title {
