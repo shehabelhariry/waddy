@@ -9,13 +9,14 @@ import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
 import { runAssistantWithFileAndMessage } from "../run";
 import { myBaseCV } from "../baseCV";
+import SettingsPanel from "../SettingsPanel"; // Import SettingsPanel
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  const [showOpenAiKeyInput, setShowOpenAiKeyInput] = useState(false);
-  const [apiKey, setApiKey] = useState<string>(""); // State for API Key
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false); // Renamed state
+  // API Key state and related logic have been moved to SettingsPanel.tsx
   const [cvObject, setCvObject] = useState(() => {
     const item = localStorage.getItem("waddyCV");
     if (item) {
@@ -39,24 +40,14 @@ const JobTracker = () => {
       }
     });
 
-    // Retrieve API key from storage on mount
-    chrome?.storage?.local.get(["openaiApiKey"], (result) => {
-      if (result.openaiApiKey) {
-        setApiKey(result.openaiApiKey);
-      }
-    });
+    // API key retrieval logic has been moved to SettingsPanel.tsx
 
     return () => {
       chrome?.runtime?.onMessage.removeListener();
     };
   }, []);
 
-  // Handler for API key input change
-  const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newApiKey = e.target.value;
-    setApiKey(newApiKey);
-    chrome?.storage?.local.set({ openaiApiKey: newApiKey });
-  };
+  // handleApiKeyChange has been moved to SettingsPanel.tsx
 
   const props: UploadProps = {
     name: "file",
@@ -92,33 +83,28 @@ const JobTracker = () => {
 
   // Handler for settings icon click
   const handleSettingsClick = () => {
-    setShowOpenAiKeyInput(!showOpenAiKeyInput);
+    setShowSettingsPanel(!showSettingsPanel); // Updated to use new state
   };
 
   return (
     <div className="popup-container">
-      <div className="settings-icon-container">
-        <SettingOutlined
-          style={{ fontSize: "24px", cursor: "pointer" }}
-          onClick={handleSettingsClick} // Attached handler
-        />
-      </div>
-
-      {/* Conditionally rendered OpenAI API Key Input */}
-      {showOpenAiKeyInput && (
-        <div className="api-key-input-container" style={{ marginBottom: "15px", width: "80%" }}>
-          <label htmlFor="apiKeyInput" style={{ display: "block", marginBottom: "5px", color: "#e0e0e0" }}>
-            OpenAI API Key:
-          </label>
-          <Input
-            id="apiKeyInput"
-            placeholder="Enter your OpenAI API Key"
-            value={apiKey}
-            onChange={handleApiKeyChange}
+      <div className="action-bar">
+        <div className="settings-icon-container">
+          <SettingOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }} // Made icon smaller
+            onClick={handleSettingsClick}
           />
         </div>
-      )}
+      </div>
 
+      <SettingsPanel visible={showSettingsPanel} />
+
+      {/* API Key input has been moved to SettingsPanel.tsx */}
+
+      {/* Main content is no longer explicitly hidden when settings panel is shown.
+          The SettingsPanel component itself is only rendered when showSettingsPanel is true.
+          Layout adjustments might be needed if SettingsPanel overlaps, but for now,
+          it will render above the rest of the content if visible. */}
       <div className="logo-container">
         <img
           className="waddy-logo"
