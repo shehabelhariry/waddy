@@ -5,11 +5,21 @@ export const callLLM = async ({
   system: string;
   prompt: string;
 }) => {
+  let apiKey = localStorage.getItem("openai_api_key");
+
+  if (!apiKey || apiKey.trim() === "") {
+    apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  }
+
+  if (!apiKey || apiKey.trim() === "") {
+    throw new Error("OpenAI API key is not set. Please set it in the settings or as an environment variable.");
+  }
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
