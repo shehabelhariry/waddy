@@ -3,17 +3,20 @@ import { chrome } from "../const";
 import { JobData } from "../types";
 import { createCVPdf } from "../download";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../utils";
-import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
-import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
+import { DeleteFilled, InboxOutlined, SettingOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, message, Space, Spin, UploadProps } from "antd"; // Added Input
 import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
 import { runAssistantWithFileAndMessage } from "../run";
 import { myBaseCV } from "../baseCV";
+import SettingsPanel from "../SettingsPanel"; // Import SettingsPanel
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false); // Renamed state
+  // API Key state and related logic have been moved to SettingsPanel.tsx
   const [cvObject, setCvObject] = useState(() => {
     const item = localStorage.getItem("waddyCV");
     if (item) {
@@ -37,10 +40,14 @@ const JobTracker = () => {
       }
     });
 
+    // API key retrieval logic has been moved to SettingsPanel.tsx
+
     return () => {
       chrome?.runtime?.onMessage.removeListener();
     };
   }, []);
+
+  // handleApiKeyChange has been moved to SettingsPanel.tsx
 
   const props: UploadProps = {
     name: "file",
@@ -74,8 +81,30 @@ const JobTracker = () => {
     },
   };
 
+  // Handler for settings icon click
+  const handleSettingsClick = () => {
+    setShowSettingsPanel(!showSettingsPanel); // Updated to use new state
+  };
+
   return (
     <div className="popup-container">
+      <div className="action-bar">
+        <div className="settings-icon-container">
+          <SettingOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }} // Made icon smaller
+            onClick={handleSettingsClick}
+          />
+        </div>
+      </div>
+
+      <SettingsPanel visible={showSettingsPanel} />
+
+      {/* API Key input has been moved to SettingsPanel.tsx */}
+
+      {/* Main content is no longer explicitly hidden when settings panel is shown.
+          The SettingsPanel component itself is only rendered when showSettingsPanel is true.
+          Layout adjustments might be needed if SettingsPanel overlaps, but for now,
+          it will render above the rest of the content if visible. */}
       <div className="logo-container">
         <img
           className="waddy-logo"

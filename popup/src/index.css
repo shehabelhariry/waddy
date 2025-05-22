@@ -22,11 +22,29 @@ body {
 }
 
 .popup-container {
+  position: relative; /* Added for positioning context */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  width: 100%; /* Ensure popup-container takes full available width */
+}
+
+.action-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 0px; /* Adjusted padding for a bit more height */
+  margin-bottom: 10px; /* Space below action bar */
+  border-bottom: 1px solid #333; /* Subtle visual distinction */
+}
+
+.settings-icon-container {
+  /* No longer absolute; it's a flex item in action-bar */
+  padding-right: 15px; /* Spacing for the icon from the edge */
+  /* z-index: 10; no longer needed */
 }
 
 .ai-title {
@@ -127,4 +145,29 @@ pre {
 
 .ant-upload-hint {
   /* color: white !important; */
+}
+
+/* Settings Panel Styling */
+.settings-panel {
+  position: absolute;
+  top: 50px; /* Position below the action bar (approx height of action-bar) */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-height: 70vh; /* Max height to prevent full screen take-over */
+  overflow-y: auto; /* Scroll if content overflows */
+  background-color: #1f1f2b; /* Slightly different dark background */
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 100; /* Ensure it's on top */
+  padding: 20px; /* Internal padding */
+  box-sizing: border-box;
+}
+
+.settings-panel h3 {
+  text-align: center;
+  color: #e0e0e0;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
