@@ -39,6 +39,7 @@ export default function UploadCVButton({ setCvObject }: UploadCvButtonProps) {
         const loadingTask = pdfjsLib.getDocument({
           data: uint8Array,
         });
+
         const pdfDocument = await loadingTask.promise;
 
         // Extract text from all pages

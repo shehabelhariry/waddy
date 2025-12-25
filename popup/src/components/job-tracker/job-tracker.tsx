@@ -37,8 +37,6 @@ const JobTracker = () => {
   useEffect(() => {
     const fetchCv = async () => {
       const cv = await getCvFromStorage();
-      console.log("Fetched CV from storage:", cv);
-      debugger;
       setCvObject(cv);
     };
     fetchCv();

@@ -17,7 +17,7 @@ export default function CvIndicator({
   };
   return (
     <Space>
-      <Typography.Text strong>{cvObject?.name} CV.pdf</Typography.Text>
+      <Typography.Text>{cvObject?.name} CV.pdf</Typography.Text>
       <Button onClick={handleDelete} type="default" icon={<DeleteOutlined />} />
     </Space>
   );

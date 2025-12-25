@@ -21,7 +21,7 @@ async function removeCvFromStorage() {
 }
 
 function storage() {
-  if (chrome?.storage[CHROME_STORAGE_POLICY]) {
+  if (chrome?.storage?.[CHROME_STORAGE_POLICY]) {
     // Could be 'sync' or 'local'
     const storageHandler = chrome.storage[CHROME_STORAGE_POLICY];
     return {
