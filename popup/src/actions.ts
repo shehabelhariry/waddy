@@ -7,6 +7,7 @@ import {
   loadPrompt,
 } from "./utils";
 import { cvSample } from "./baseCV";
+import { getCvFromStorage } from "./storage";
 
 export const getCvJsonFromExtractedText = async (extractedText: string) => {
   const prompt = await loadPrompt("createCvObject.txt", {
@@ -133,8 +134,10 @@ export async function generateResumePDF(
 ) {
   setIsLoading(true);
 
+  const cv = await getCvFromStorage();
+
   const prompt = await loadPrompt("customizedResume.txt", {
-    cv: localStorage.getItem("waddyCV")!,
+    cv: JSON.stringify(cv, null, 2),
     job: jobData.description,
   });
 

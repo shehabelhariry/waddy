@@ -11,6 +11,11 @@ import { callLLM, extractTextBetweenTags, loadPrompt } from "../../utils";
 import { CvType } from "../../baseCV";
 import { createCVPdf } from "../../download";
 import { getCvJsonFromExtractedText } from "../../actions";
+import {
+  getCvFromStorage,
+  removeCvFromStorage,
+  setCvInStorage,
+} from "../../storage";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -18,12 +23,7 @@ const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  const [cvObject, setCvObject] = useState(() => {
-    const item = localStorage.getItem("waddyCV");
-    if (item) {
-      return JSON.parse(item);
-    }
-  });
+  const [cvObject, setCvObject] = useState<CvType | undefined>(undefined);
 
   useEffect(() => {
     // Send message to content script to extract job data
@@ -44,6 +44,17 @@ const JobTracker = () => {
     return () => {
       chrome?.runtime?.onMessage.removeListener();
     };
+  }, []);
+
+  // This can potentially be refactored
+  useEffect(() => {
+    const fetchCv = async () => {
+      setLoading(true);
+      const cv = await getCvFromStorage();
+      setCvObject(cv);
+      setLoading(false);
+    };
+    fetchCv();
   }, []);
 
   const props: UploadProps = {
@@ -82,7 +93,7 @@ const JobTracker = () => {
 
         const cv = await getCvJsonFromExtractedText(fullText);
         setCvObject(cv);
-        localStorage.setItem("waddfyCV", JSON.stringify(cv));
+        await setCvInStorage(cv);
         setLoading(false);
       }
       if (status === "done") {
@@ -153,7 +164,7 @@ const JobTracker = () => {
               {`${cvObject.name}.pdf`}{" "}
               <DeleteFilled
                 onClick={() => {
-                  localStorage.removeItem("waddyCV");
+                  removeCvFromStorage();
                   setCvObject(undefined);
                 }}
               />
