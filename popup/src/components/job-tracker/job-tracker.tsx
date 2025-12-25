@@ -11,7 +11,6 @@ import CvIndicator from "./cv-indicator";
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
-  const [loading, setLoading] = useState(false);
   const [cvObject, setCvObject] = useState<CvType | undefined>(undefined);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const JobTracker = () => {
     chrome?.runtime?.onMessage.addListener((message: any) => {
       if (message.action === "DATA_EXTRACTED") {
         setJobData(message.data.current);
-        setLoading(false);
       }
     });
 
@@ -38,10 +36,10 @@ const JobTracker = () => {
   // This can potentially be refactored
   useEffect(() => {
     const fetchCv = async () => {
-      setLoading(true);
       const cv = await getCvFromStorage();
+      console.log("Fetched CV from storage:", cv);
+      debugger;
       setCvObject(cv);
-      setLoading(false);
     };
     fetchCv();
   }, []);

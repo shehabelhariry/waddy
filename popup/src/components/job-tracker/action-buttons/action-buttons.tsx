@@ -18,16 +18,11 @@ export default function ActionButtons({
   cvObject,
   jobData,
 }: ActionButtonsProps) {
-  console.log({ cvObject, jobData });
   return (
     <div className="button-container">
       {!cvObject ? <UploadCVButton setCvObject={setCvObject} /> : null}
       {cvObject && jobData && (
-        <CreateTailoredCVButton
-          cvObject={cvObject}
-          jobData={jobData}
-          setCvObject={setCvObject}
-        />
+        <CreateTailoredCVButton cvObject={cvObject} jobData={jobData} />
       )}
     </div>
   );
