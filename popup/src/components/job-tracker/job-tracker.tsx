@@ -56,7 +56,7 @@ const JobTracker = () => {
         />
       </div>
 
-      {cvObject && jobData ? <JobCard jobData={jobData} /> : null}
+      <JobCard jobData={jobData} />
       {cvObject && (
         <CvIndicator cvObject={cvObject} setCvObject={setCvObject} />
       )}

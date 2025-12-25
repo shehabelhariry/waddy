@@ -70,6 +70,7 @@ export default function UploadCVButton({ setCvObject }: UploadCvButtonProps) {
     async onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
+    showUploadList: false,
   };
 
   return (
