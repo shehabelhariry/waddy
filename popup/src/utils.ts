@@ -46,9 +46,8 @@ export const loadPrompt = async (
   replacements: Record<string, string>
 ) => {
   const response = await fetch(`prompts/${fileName}`);
-  console.log(response);
+
   let promptText = await response.text();
-  console.log(promptText);
 
   // Replace placeholders {{cv}}, {{company}}, etc.
   Object.keys(replacements).forEach((key) => {

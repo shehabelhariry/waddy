@@ -54,6 +54,7 @@ const JobTracker = () => {
     },
     async onChange(info) {
       const { status } = info.file;
+
       if (status !== "uploading") {
         setLoading(true);
         const file = info.fileList[0]?.originFileObj;

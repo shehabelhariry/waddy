@@ -4,10 +4,13 @@
   "version": "1.0",
   "description": "Track and manage LinkedIn job applications",
   "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": ["https://www.linkedin.com/jobs/*", "https://script.google.com/macros/s/*" ],
+  "host_permissions": [
+    "https://www.linkedin.com/jobs/*",
+    "https://script.google.com/macros/s/*"
+  ],
   "background": {
     "service_worker": "background.js"
-  },    
+  },
   "action": {
     "default_popup": "popup/dist/index.html",
     "default_icon": "small_logo.png"
