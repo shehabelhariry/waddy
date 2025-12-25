@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { chrome } from "../const";
-import { JobData } from "../types";
-import { createCVPdf } from "../download";
-import { callLLM, extractTextBetweenTags, loadPrompt } from "../utils";
 import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
 import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
-import { cvSample } from "../baseCV";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
-import { getCvJsonFromExtractedText } from "../actions";
+import { JobData } from "../../types";
+import { chrome } from "../../const";
+import { callLLM, extractTextBetweenTags, loadPrompt } from "../../utils";
+import { CvType } from "../../baseCV";
+import { createCVPdf } from "../../download";
+import { getCvJsonFromExtractedText } from "../../actions";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -182,7 +182,7 @@ const JobTracker = () => {
                   prompt: prompt,
                 });
 
-                let resume: typeof cvSample = JSON.parse(
+                let resume: CvType = JSON.parse(
                   extractTextBetweenTags(resp, "new_cv") || "{}"
                 );
 

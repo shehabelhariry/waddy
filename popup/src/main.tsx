@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { ConfigProvider, theme } from "antd";
-import JobTracker from "./JobTracker/JobTracker";
+import JobTracker from "./components/job-tracker/job-tracker";
 
 createRoot(document.getElementById("root")!).render(
   <ConfigProvider
