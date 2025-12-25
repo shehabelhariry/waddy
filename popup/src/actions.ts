@@ -7,6 +7,22 @@ import {
   loadPrompt,
 } from "./utils";
 
+export const getCvJsonFromExtractedText = async (extractedText: string) => {
+  const prompt = await loadPrompt("createCvObject.txt", {
+    cv_text: extractedText,
+  });
+
+  const response = await callLLM({
+    system: `You are an expert in extracting structured data from CVs`,
+    prompt,
+  });
+
+  if (!response) return null;
+
+  const cvString = extractTextBetweenTags(response, "new_cv")!;
+  return JSON.parse(cvString);
+};
+
 export const handleCoverLetter = async (
   jobData: JobData,
   setLoading: Function,
@@ -38,6 +54,7 @@ export const handleCoverLetter = async (
 
   downloadText(letter, `${jobData.company}.txt`);
 };
+
 type HandleSaveJobArgs = {
   jobData: JobData;
   score: string | null;

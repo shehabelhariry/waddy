@@ -7,8 +7,12 @@ import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
 import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
-import { runAssistantWithFileAndMessage } from "../run";
 import { myBaseCV } from "../baseCV";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
+import { getCvJsonFromExtractedText } from "../actions";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
@@ -52,13 +56,32 @@ const JobTracker = () => {
       const { status } = info.file;
       if (status !== "uploading") {
         setLoading(true);
-        const answer = await runAssistantWithFileAndMessage({
-          file: info.file,
+        const file = info.fileList[0]?.originFileObj;
+
+        if (!file) return;
+        const arrayBuffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+
+        // Load the PDF
+        const loadingTask = pdfjsLib.getDocument({
+          data: uint8Array,
         });
-        const cv = extractTextBetweenTags(answer, "new_cv")!;
-        localStorage.setItem("waddyCV", cv);
-        let cvObj = JSON.parse(cv);
-        setCvObject(cvObj);
+        const pdfDocument = await loadingTask.promise;
+
+        // Extract text from all pages
+        let fullText = "";
+
+        for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
+          const page = await pdfDocument.getPage(pageNum);
+          const textContent = await page.getTextContent();
+          // @ts-ignore
+          const pageText = textContent.items.map((item) => item.str).join(" ");
+          fullText += pageText + "\n\n";
+        }
+
+        const cv = await getCvJsonFromExtractedText(fullText);
+        setCvObject(cv);
+        localStorage.setItem("waddfyCV", JSON.stringify(cv));
         setLoading(false);
       }
       if (status === "done") {

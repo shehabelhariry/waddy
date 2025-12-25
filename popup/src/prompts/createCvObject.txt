@@ -1,5 +1,10 @@
-You are required to read the file uploaded (a CV) and convert the output into a JSON object that match the schema of the following object. 
-Take into consideration that only the sections defined are available to fill, you can ignore other sections.
+The following is my CV summary:
+```
+{{cv_text}}
+```
+
+You are required to convert this summary into a structured JSON structure that matches the schema of the following object. 
+Take into consideration that only the sections matched by you should be filled, you can ignore other sections.
 You should return the output JSON between <new_cv></new_cv> tags. 
 
 This is the sample of the JSON: 
@@ -7,9 +12,9 @@ This is the sample of the JSON:
 {
   name: John doe",
   contact: {
-    location: "Alexandria, Egypt",
-    phone: "201276900621",
-    email: "shehab.elhariry@hotmail.com",
+    location: "City, Country",
+    phone: "1111111",
+    email: "",
     linkedin: "linkedin.com/in/shehabelhariry",
   },
   title: "Frontend Engineer",
