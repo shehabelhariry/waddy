@@ -1,4 +1,4 @@
-export const myBaseCV = {
+export const cvSample = {
   name: "Shehab Elhariry",
   contact: {
     location: "Alexandria, Egypt",
@@ -103,3 +103,5 @@ export const myBaseCV = {
     },
   ],
 };
+
+export type CvType = typeof cvSample;

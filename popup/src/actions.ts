@@ -6,10 +6,12 @@ import {
   extractTextBetweenTags,
   loadPrompt,
 } from "./utils";
+import { cvSample } from "./baseCV";
 
 export const getCvJsonFromExtractedText = async (extractedText: string) => {
   const prompt = await loadPrompt("createCvObject.txt", {
     cv_text: extractedText,
+    sample_json: JSON.stringify(cvSample, null, 2),
   });
 
   const response = await callLLM({

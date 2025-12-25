@@ -7,7 +7,7 @@ import { DeleteFilled, InboxOutlined } from "@ant-design/icons";
 import { Button, Flex, message, Space, Spin, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import Logo from "../assets/logo_non_transparent.png";
-import { myBaseCV } from "../baseCV";
+import { cvSample } from "../baseCV";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { getCvJsonFromExtractedText } from "../actions";
@@ -182,7 +182,7 @@ const JobTracker = () => {
                   prompt: prompt,
                 });
 
-                let resume: typeof myBaseCV = JSON.parse(
+                let resume: typeof cvSample = JSON.parse(
                   extractTextBetweenTags(resp, "new_cv") || "{}"
                 );
 
