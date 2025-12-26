@@ -1,5 +1,4 @@
 import { JobData } from "../../types";
-import { Button } from "antd";
 
 interface JobCardProps {
   jobData?: JobData | null;
@@ -8,15 +7,14 @@ export default function JobCard({ jobData }: JobCardProps) {
   if (!jobData) {
     return (
       <p>
-        No job info is detected, please go to your LinkedIn Jobs Recommended
-        page:
+        No job info is detected, please go to your:
         <a
           type="link"
           target="_blank"
           className="link-primary"
           href="https://www.linkedin.com/jobs/collections/recommended"
         >
-          here
+          LinkedIn recommended jobs page
         </a>
       </p>
     );

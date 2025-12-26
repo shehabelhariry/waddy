@@ -139,14 +139,16 @@ pre {
   box-sizing: border-box;
 }
 
-.content {
-  padding: 0 10px;
-}
-
 .main-content {
   width: calc(100% - 64px);
+  display: flex;
+  flex-direction: column;
 }
 
+.content {
+  padding: 0 10px;
+  flex: 1;
+}
 /* Links Style */
 
 a.link-primary {
