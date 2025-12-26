@@ -10,13 +10,14 @@ export default function JobCard({ jobData }: JobCardProps) {
       <p>
         No job info is detected, please go to your LinkedIn Jobs Recommended
         page:
-        <Button
+        <a
           type="link"
           target="_blank"
+          className="link-primary"
           href="https://www.linkedin.com/jobs/collections/recommended"
         >
-          Here
-        </Button>
+          here
+        </a>
       </p>
     );
   }

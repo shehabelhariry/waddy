@@ -8,10 +8,15 @@ import JobCard from "./job-card";
 import ActionButtons from "./action-buttons/action-buttons";
 import { getCvFromStorage } from "../../storage";
 import CvIndicator from "./cv-indicator";
+import { Link, Outlet } from "react-router";
+import { HomeFilled, SettingFilled } from "@ant-design/icons";
 
 const JobTracker = () => {
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [cvObject, setCvObject] = useState<CvType | undefined>(undefined);
+  const [openApiKey, setOpenApiKey] = useState<string | null>(
+    import.meta.env.VITE_OPENAI_API_KEY || null
+  );
 
   useEffect(() => {
     // Send message to content script to extract job data
@@ -44,14 +49,6 @@ const JobTracker = () => {
 
   return (
     <div className="popup-container">
-      <div className="logo-container">
-        <img
-          className="waddy-logo"
-          src={Logo}
-          alt="Waddy Job applications logo"
-        />
-      </div>
-
       <JobCard jobData={jobData} />
       {cvObject && (
         <CvIndicator cvObject={cvObject} setCvObject={setCvObject} />
