@@ -24,13 +24,14 @@ async function removeCvFromStorage() {
 
 // Handle OpenAI API Key Storage
 async function setApiKeyInStorage(apiKey: string | null) {
-  storage(OPEN_AI_API_KEY_STORAGE_KEY).set(JSON.stringify(apiKey));
+  if (apiKey === null) return;
+  storage(OPEN_AI_API_KEY_STORAGE_KEY).set(apiKey);
 }
 
 async function getApiKeyFromStorage() {
   const apiKeyString = await storage(OPEN_AI_API_KEY_STORAGE_KEY).get();
   if (apiKeyString) {
-    return JSON.parse(apiKeyString) as string | null;
+    return apiKeyString;
   }
   return null;
 }

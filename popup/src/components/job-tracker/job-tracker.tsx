@@ -6,8 +6,10 @@ import JobCard from "./job-card";
 import ActionButtons from "./action-buttons/action-buttons";
 import { getCvFromStorage } from "../../storage";
 import CvIndicator from "./cv-indicator";
+import { useApiKeyContext } from "../../contexts/api-key-context";
 
 const JobTracker = () => {
+  const { openApiKey } = useApiKeyContext();
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [cvObject, setCvObject] = useState<CvType | undefined>(undefined);
 
@@ -39,6 +41,16 @@ const JobTracker = () => {
     };
     fetchCv();
   }, []);
+
+  if (!openApiKey) {
+    return (
+      <div className="popup-container">
+        <p>
+          Please set your OpenAI API key in settings to use the Job Tracker.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="popup-container">
