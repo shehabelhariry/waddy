@@ -313,7 +313,10 @@ function generateCV(cvData: CV): jsPDF {
 /**
  * Main function to generate and save CV as PDF
  */
-export function createCVPdf(cvData: CV, customColors?: typeof COLORS): void {
+export function generateResumePdf(
+  cvData: CV,
+  customColors?: typeof COLORS
+): void {
   // Allow custom colors if provided
   if (customColors) {
     Object.assign(COLORS, customColors);
@@ -322,16 +325,3 @@ export function createCVPdf(cvData: CV, customColors?: typeof COLORS): void {
   const doc = generateCV(cvData);
   doc.save(`${cvData.name.replace(/\s+/g, "_")}_CV.pdf`);
 }
-
-// Example usage:
-// import { myBaseCV } from './cv-data';
-// createCVPdf(myBaseCV);
-
-// Or with custom colors:
-// createCVPdf(myBaseCV, {
-//   primary: '#2c3e50',
-//   secondary: '#34495e',
-//   accent: '#3498db',
-//   text: '#2c3e50',
-//   lightText: '#7f8c8d'
-// });

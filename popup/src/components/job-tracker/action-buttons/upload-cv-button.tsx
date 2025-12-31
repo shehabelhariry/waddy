@@ -6,7 +6,7 @@ import Dragger from "antd/es/upload/Dragger";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { message } from "antd";
-import { getCvJsonFromExtractedText } from "../../../actions";
+import { getCvJsonFromExtractedText } from "../../../actions/actions";
 import { setCvInStorage } from "../../../storage";
 import { CvType } from "../../../baseCV";
 

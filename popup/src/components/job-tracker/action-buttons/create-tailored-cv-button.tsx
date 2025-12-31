@@ -1,9 +1,9 @@
 import { CvType } from "../../../baseCV";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../../../utils";
-import { createCVPdf } from "../../../download";
 import { Button } from "antd";
 import { useState } from "react";
 import { JobData } from "../../../types";
+import { generateResumePdf } from "../../../actions/generate-resume";
 
 interface CreateTailoredCVButtonProps {
   cvObject: CvType;
@@ -36,7 +36,7 @@ export default function CreateTailoredCVButton({
           extractTextBetweenTags(resp, "new_cv") || "{}"
         );
 
-        createCVPdf(resume);
+        generateResumePdf(resume);
         setIsAiLoading(false);
       }}
     >
