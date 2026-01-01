@@ -234,51 +234,61 @@ export function renderExperience(
 ): number {
   const contentWidth = doc.internal.pageSize.getWidth() - 2 * PAGE_MARGIN;
 
-  yPos = drawSectionHeader(doc, "Professional Experience", yPos);
+  return renderSection({
+    doc,
+    yPos,
+    title: "Professional Experience",
+    renderContent: (doc, y) => {
+      for (const exp of experience) {
+        y = ensurePageSpace(doc, y, 30);
 
-  for (const exp of experience) {
-    yPos = ensurePageSpace(doc, yPos, 35);
+        // ── Company header ─────────────────────────
+        setTextStyle(doc, {
+          size: FONTS.sizes.subHeader,
+          style: "bold",
+          color: COLORS.primary,
+        });
+        doc.text(exp.company, PAGE_MARGIN, y);
 
-    setTextStyle(doc, {
-      size: FONTS.sizes.subHeader,
-      style: "bold",
-      color: COLORS.primary,
-    });
+        setTextStyle(doc, {
+          size: FONTS.sizes.small,
+          color: COLORS.lightText,
+        });
+        drawRightAlignedText(doc, exp.location, y);
 
-    doc.text(exp.company, PAGE_MARGIN, yPos);
+        y += 6;
 
-    setTextStyle(doc, {
-      size: FONTS.sizes.small,
-      color: COLORS.lightText,
-    });
+        // ── Roles ──────────────────────────────────
+        for (const role of exp.roles) {
+          y = ensurePageSpace(doc, y, 20);
 
-    drawRightAlignedText(doc, exp.location, yPos);
-    yPos += 6;
+          setTextStyle(doc, {
+            size: FONTS.sizes.normal,
+            style: "bold",
+            color: COLORS.secondary,
+          });
+          doc.text(role.title, PAGE_MARGIN, y);
 
-    for (const role of exp.roles) {
-      setTextStyle(doc, {
-        size: FONTS.sizes.normal,
-        style: "bold",
-        color: COLORS.secondary,
-      });
-      doc.text(role.title, PAGE_MARGIN, yPos);
+          setTextStyle(doc, {
+            size: FONTS.sizes.small,
+            color: COLORS.lightText,
+          });
 
-      setTextStyle(doc, {
-        size: FONTS.sizes.small,
-        color: COLORS.lightText,
-      });
-      drawRightAlignedText(doc, `${role.start_date} - ${role.end_date}`, yPos);
-      yPos += 5;
+          drawRightAlignedText(doc, `${role.start_date} - ${role.end_date}`, y);
 
-      yPos = drawBulletList(doc, role.responsibilities, yPos, contentWidth);
+          y += 5;
 
-      yPos += 6;
-    }
+          y = drawBulletList(doc, role.responsibilities, y, contentWidth);
 
-    yPos = endSection(yPos);
-  }
+          y += 6; // space between roles
+        }
 
-  return yPos;
+        y += 4; // space between companies
+      }
+
+      return y;
+    },
+  });
 }
 
 export function renderEducation(
