@@ -1,7 +1,25 @@
 import jsPDF from "jspdf";
-import { COLORS, FONTS, PAGE_MARGIN, SPACING_BETWEEN_SECTIONS } from "./const";
+import {
+  COLORS,
+  FONTS,
+  PAGE_MARGIN,
+  SPACING,
+  SPACING_BETWEEN_SECTIONS,
+} from "./const";
 import { CvType } from "../../baseCV";
 import { Certification, Education, Experience } from "./types";
+
+function addSpacing(yPos: number, amount: number): number {
+  return yPos + amount;
+}
+
+function endSection(yPos: number): number {
+  return addSpacing(yPos, SPACING.sectionGap);
+}
+
+function betweenItems(yPos: number): number {
+  return addSpacing(yPos, SPACING.itemGap);
+}
 
 export function setTextStyle(
   doc: jsPDF,
@@ -134,29 +152,56 @@ export function renderHeader(doc: jsPDF, cv: CvType): number {
   return yPos;
 }
 
+interface RenderSectionArgs {
+  doc: jsPDF;
+  yPos: number;
+  title: string;
+  renderContent: (doc: jsPDF, yPos: number) => number;
+  minHeight?: number;
+}
+
+export function renderSection({
+  doc,
+  yPos,
+  title,
+  minHeight = 20,
+  renderContent,
+}: RenderSectionArgs): number {
+  // Header
+  yPos = drawSectionHeader(doc, title, yPos);
+
+  // Make sure at least some content fits
+  yPos = ensurePageSpace(doc, yPos, minHeight);
+
+  // Section body
+  yPos = renderContent(doc, yPos);
+
+  // Consistent spacing after every section
+  return endSection(yPos);
+}
+
 // Section Helpers
 export function renderSummary(
   doc: jsPDF,
   summary: string,
   yPos: number
 ): number {
-  const contentWidth = doc.internal.pageSize.getWidth() - 2 * PAGE_MARGIN;
+  return renderSection({
+    doc,
+    yPos,
+    title: "Summary",
+    minHeight: 25, // enough for a few lines of text
+    renderContent: (doc, y) => {
+      const contentWidth = doc.internal.pageSize.getWidth() - 2 * PAGE_MARGIN;
 
-  yPos = drawSectionHeader(doc, "Summary", yPos);
+      setTextStyle(doc, {
+        size: FONTS.sizes.normal,
+        color: COLORS.text,
+      });
 
-  // Ensure enough space for at least a few lines
-  yPos = ensurePageSpace(doc, yPos, 25);
-
-  setTextStyle(doc, {
-    size: FONTS.sizes.normal,
-    color: COLORS.text,
+      return drawWrappedText(doc, summary, PAGE_MARGIN, y, contentWidth, 5);
+    },
   });
-
-  yPos =
-    drawWrappedText(doc, summary, PAGE_MARGIN, yPos, contentWidth, 5) +
-    SPACING_BETWEEN_SECTIONS;
-
-  return yPos;
 }
 
 export function renderSkills(
@@ -164,20 +209,22 @@ export function renderSkills(
   skills: string[],
   yPos: number
 ): number {
-  const contentWidth = doc.internal.pageSize.getWidth() - 2 * PAGE_MARGIN;
+  return renderSection({
+    doc,
+    yPos,
+    title: "Skills",
+    renderContent: (doc, y) => {
+      const contentWidth = doc.internal.pageSize.getWidth() - 2 * PAGE_MARGIN;
 
-  yPos = drawSectionHeader(doc, "Skills", yPos);
+      const text = skills.join("  •  ");
 
-  setTextStyle(doc, {
-    size: FONTS.sizes.normal,
+      setTextStyle(doc, {
+        size: FONTS.sizes.normal,
+      });
+
+      return drawWrappedText(doc, text, PAGE_MARGIN, y, contentWidth, 5);
+    },
   });
-
-  const text = skills.join("  •  ");
-  yPos =
-    drawWrappedText(doc, text, PAGE_MARGIN, yPos, contentWidth, 5) +
-    SPACING_BETWEEN_SECTIONS;
-
-  return yPos;
 }
 
 export function renderExperience(
@@ -197,12 +244,14 @@ export function renderExperience(
       style: "bold",
       color: COLORS.primary,
     });
+
     doc.text(exp.company, PAGE_MARGIN, yPos);
 
     setTextStyle(doc, {
       size: FONTS.sizes.small,
       color: COLORS.lightText,
     });
+
     drawRightAlignedText(doc, exp.location, yPos);
     yPos += 6;
 
@@ -226,7 +275,7 @@ export function renderExperience(
       yPos += 6;
     }
 
-    yPos += SPACING_BETWEEN_SECTIONS;
+    yPos = endSection(yPos);
   }
 
   return yPos;
@@ -247,20 +296,24 @@ export function renderEducation(
       style: "bold",
       color: COLORS.primary,
     });
+
     doc.text(edu.degree, PAGE_MARGIN, yPos);
     yPos += 5;
 
     setTextStyle(doc, {
       size: FONTS.sizes.normal,
     });
+
     doc.text(edu.institution, PAGE_MARGIN, yPos);
 
     setTextStyle(doc, {
       size: FONTS.sizes.small,
       color: COLORS.lightText,
     });
+
     drawRightAlignedText(doc, `${edu.start_date} - ${edu.end_date}`, yPos);
-    yPos += 9;
+
+    yPos = endSection(yPos);
   }
 
   return yPos;
@@ -296,7 +349,7 @@ export function renderCertifications(
       color: COLORS.lightText,
     });
     drawRightAlignedText(doc, cert.date, yPos);
-    yPos += 9;
+    yPos = endSection(yPos);
   }
 
   return yPos;

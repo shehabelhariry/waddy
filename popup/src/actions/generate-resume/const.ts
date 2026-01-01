@@ -23,5 +23,11 @@ export const FONTS = {
   },
 };
 
+export const SPACING = {
+  sectionGap: 8, // space after a section body
+  itemGap: 6, // space between items (roles, certs)
+  tight: 3, // small visual separation
+};
+
 export const PAGE_MARGIN = 25;
 export const SPACING_BETWEEN_SECTIONS = 5;
