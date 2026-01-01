@@ -12,7 +12,7 @@ export const callLLM = async ({
       Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o",
+      model: "gpt-4.1-mini",
       messages: [
         { role: "system", content: system },
         { role: "user", content: prompt },

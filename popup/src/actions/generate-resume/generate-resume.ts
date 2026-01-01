@@ -28,7 +28,7 @@ export const generateResumePdf = (cv: CvType) => {
         text: cv.skills.flatMap((skill, index) => [
           {
             text: skill,
-            style: index < 3 ? "skillHighlight" : "text",
+            style: "text",
           },
           { text: index < cv.skills.length - 1 ? " • " : "" },
         ]),

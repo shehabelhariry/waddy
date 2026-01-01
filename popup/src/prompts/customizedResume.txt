@@ -10,17 +10,18 @@ Generate a tailored version of my CV that specifically addresses the job require
 - **Reorder** skills to prioritize those mentioned in the job description
 - **Add** relevant skills from my CV that weren't previously listed if they match the job
 - **Remove** skills that are least relevant to this specific position
-- Keep the skills array concise (aim for 8-12 items)
+- Keep the skills array concise (aim for 4-6 items)
 - **Source of truth**: Only use skills present in the original CV
 
 ### 2. Summary
-- Incorporate 3-5 key terms/phrases from the job description naturally
+- Incorporate 2-3 key terms/phrases from the job description naturally
 - Highlight specific strengths that directly match their requirements
-- Maintain professional tone and approximately the same length as original
+- Maintain professional tone
 - Focus on achievements and capabilities most relevant to this role
 
 ### 3. Experience
 - **Reorder responsibilities** within each role to prioritize relevant ones first
+- **Remove irrelevant responsibilities** within each role
 - **Expand** on relevant projects/responsibilities with more detail
 - **Quantify** achievements where possible (percentages, time saved, team size, etc.)
 - **Mirror language** from job requirements when describing accomplishments
