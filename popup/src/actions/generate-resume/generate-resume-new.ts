@@ -38,30 +38,65 @@ export const generateCvPdfWithPdfMake = (cv: CvType) => {
 
       // Experience
       { text: "Experience", style: "sectionHeader" },
-      ...cv.experience.flatMap((exp) =>
-        exp.roles
-          .map((role) => [
-            {
-              text: `${role.title} @ ${exp.company} (${role.start_date} - ${role.end_date})`,
-              style: "roleTitle",
-            },
-            { ul: role.responsibilities, style: "text" },
-          ])
-          .flat()
-      ),
+      ...cv.experience.map((exp) => ({
+        stack: [
+          // Company
+          {
+            text: exp.company + (exp.location ? ` - ${exp.location}` : ""),
+            style: "companyTitle",
+            margin: [0, 10, 0, 4],
+          },
+
+          // Roles inside company
+          ...exp.roles.map((role) => ({
+            stack: [
+              {
+                text: `${role.title} (${role.start_date} - ${role.end_date})`,
+                style: "roleTitle",
+                margin: [10, 4, 0, 2],
+              },
+              {
+                ul: role.responsibilities,
+                style: "text",
+                margin: [20, 0, 0, 4],
+              },
+            ],
+          })),
+        ],
+      })),
 
       // Education
       { text: "Education", style: "sectionHeader" },
       ...cv.education.map((edu) => ({
-        text: `${edu.degree}, ${edu.institution} (${edu.start_date} - ${edu.end_date})`,
-        style: "text",
+        stack: [
+          {
+            text: edu.institution,
+            style: "companyTitle", // reuse or create education-specific style
+            margin: [0, 8, 0, 2],
+          },
+          {
+            text: `${edu.degree} (${edu.start_date} - ${edu.end_date})`,
+            style: "roleTitle",
+            margin: [10, 0, 0, 6],
+          },
+        ],
       })),
 
       // Certifications
       { text: "Certifications", style: "sectionHeader" },
       ...cv.certifications.map((cert) => ({
-        text: `${cert.name}, ${cert.institution} (${cert.date})`,
-        style: "text",
+        stack: [
+          {
+            text: cert.institution,
+            style: "companyTitle",
+            margin: [0, 8, 0, 2],
+          },
+          {
+            text: `${cert.name} (${cert.date})`,
+            style: "roleTitle",
+            margin: [10, 0, 0, 6],
+          },
+        ],
       })),
     ],
 
@@ -81,6 +116,12 @@ export const generateCvPdfWithPdfMake = (cv: CvType) => {
         margin: [0, 10, 0, 5],
       },
       roleTitle: { fontSize: 12, bold: true, margin: [0, 5, 0, 2] },
+      companyTitle: {
+        fontSize: 12,
+        bold: true,
+        margin: [0, 10, 0, 4],
+        italics: true,
+      },
       text: { fontSize: 11, margin: [0, 0, 0, 2] },
       text_underline: {
         fontSize: 11,
