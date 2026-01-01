@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Land Your Job",
+  "name": "Waddy - Generate Tailored Resumes",
   "version": "1.0",
-  "description": "Track and manage LinkedIn job applications",
+  "description": "Waddy helps you land your dream job by generating tailored resumes and cover letters for LinkedIn job postings.",
   "permissions": ["activeTab", "storage", "scripting"],
   "host_permissions": [
     "https://www.linkedin.com/jobs/*",
@@ -20,5 +20,10 @@
       "matches": ["https://www.linkedin.com/jobs/*"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "./small_logo.png",
+    "48": "./small_logo.png",
+    "128": "./small_logo.png"
+  }
 }
