@@ -1,13 +1,14 @@
-import { CvType } from "../../../baseCV";
+import { cvSample, CvType } from "../../../baseCV";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../../../utils";
 import { Button } from "antd";
 import { useState } from "react";
 import { JobData } from "../../../types";
-import { generateResumePdf } from "../../../actions/generate-resume";
+import { generateResumePdf } from "../../../actions/generate-resume/generate-resume";
+import { isDebugMode } from "../../../const";
 
 interface CreateTailoredCVButtonProps {
-  cvObject: CvType;
-  jobData: JobData;
+  cvObject?: CvType | null;
+  jobData?: JobData;
 }
 
 export default function CreateTailoredCVButton({
@@ -16,11 +17,19 @@ export default function CreateTailoredCVButton({
 }: CreateTailoredCVButtonProps) {
   const [isAiLoading, setIsAiLoading] = useState(false);
 
+  if ((!cvObject || !jobData) && !isDebugMode) return null;
+
   return (
     <Button
       className="ai-button"
       loading={isAiLoading}
       onClick={async () => {
+        // Debug mode to test resume generation without LLM calls
+        if (isDebugMode) {
+          generateResumePdf(cvSample);
+          return;
+        }
+
         setIsAiLoading(true);
         const prompt = await loadPrompt("customizedResume.txt", {
           cv: JSON.stringify(cvObject, null, 2),

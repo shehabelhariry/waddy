@@ -4,6 +4,7 @@ import UploadCVButton from "./upload-cv-button";
 import { CvType } from "../../../baseCV";
 import CreateTailoredCVButton from "./create-tailored-cv-button";
 import { JobData } from "../../../types";
+import { isDebugMode } from "../../../const";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -18,10 +19,13 @@ export default function ActionButtons({
   cvObject,
   jobData,
 }: ActionButtonsProps) {
+  const shouldShowCreateTailoredCVButton = (cvObject && jobData) || isDebugMode;
+
   return (
     <div className="button-container">
       {!cvObject ? <UploadCVButton setCvObject={setCvObject} /> : null}
-      {cvObject && jobData && (
+
+      {shouldShowCreateTailoredCVButton && (
         <CreateTailoredCVButton cvObject={cvObject} jobData={jobData} />
       )}
     </div>
