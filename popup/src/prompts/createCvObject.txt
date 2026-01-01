@@ -3,11 +3,70 @@ The following is my CV summary:
 {{cv_text}}
 ```
 
-You are required to convert this summary into a structured JSON structure that matches the schema of the following object. 
-Take into consideration that only the sections matched by you should be filled, you can ignore other sections.
-You should return the output JSON between <new_cv></new_cv> tags. 
+Convert this CV into a structured JSON object following the schema below.
 
-This is the sample of the JSON: 
+## Instructions
+- Only include sections where you find matching information in the CV text
+- Set missing fields to null (do not omit them or use empty strings)
+- For date fields, use format "MMM YYYY" (e.g., "Jan 2024") or "Present" for current positions
+- For arrays (skills, experience, education), only include items you can extract from the text
+- Preserve exact field names and structure from the schema
+- Return ONLY valid JSON with no markdown code fences or explanatory text
+- Wrap your output in `<new_cv></new_cv>` tags
+
+## Expected TypeScript Type
+```typescript
+type CV = {
+  name: string;
+  contact: {
+    location: string | null;
+    phone: string | null;
+    email: string | null;
+    linkedin: string | null;
+  };
+  title: string | null;
+  summary: string | null;
+  skills: string[];
+  experience: Array<{
+    company: string;
+    location: string | null;
+    roles: Array<{
+      title: string;
+      start_date: string;
+      end_date: string; // Use "Present" for current roles
+      responsibilities: string[];
+    }>;
+  }>;
+  education: Array<{
+    degree: string;
+    institution: string;
+    start_date: string | null;
+    end_date: string | null;
+  }>;
+  certifications: Array<{
+    name: string;
+    institution: string | null;
+    date: string | null;
+  }>;
+};
 ```
+
+## Example Output Structure
+```json
 {{sample_json}}
 ```
+
+## Specific Extraction Guidance
+- **name**: Extract full name from CV
+- **contact.phone**: Include country code if available, remove spaces/dashes
+- **title**: Job title or professional headline
+- **summary**: Professional summary or objective statement
+- **skills**: Extract as individual items (e.g., "React.js", "TypeScript"), not grouped
+- **experience.roles.responsibilities**: Break down into bullet points, each as separate array item
+- **dates**: Use abbreviated month format "MMM YYYY" (Jan 2024, Feb 2023, etc.)
+
+## Common Mistakes to Avoid
+- ❌ Don't wrap the JSON in ```json code fences
+- ❌ Don't invent information not present in the CV
+- ❌ Don't combine multiple responsibilities into one string
+- ❌ Don't use full date format like "January 2024" (use "Jan 2024")

@@ -30,39 +30,36 @@ export const generateResumePdf = (cv: CvType) => {
         text: cv.skills.flatMap((skill, index) => [
           {
             text: skill,
-            style: index < 3 ? "text_underline" : "text",
+            style: index < 3 ? "skillHighlight" : "text",
           },
           { text: index < cv.skills.length - 1 ? " • " : "" },
         ]),
+        margin: [0, 0, 0, 6],
       },
 
       // Experience
       { text: "Experience", style: "sectionHeader" },
       ...cv.experience.map((exp) => ({
         stack: [
-          // Company
           {
             text: exp.company + (exp.location ? ` - ${exp.location}` : ""),
             style: "companyTitle",
-            margin: [0, 10, 0, 4],
           },
-
-          // Roles inside company
           ...exp.roles.map((role) => ({
             stack: [
               {
                 text: `${role.title} (${role.start_date} - ${role.end_date})`,
                 style: "roleTitle",
-                margin: [10, 4, 0, 2],
               },
               {
                 ul: role.responsibilities,
                 style: "text",
-                margin: [20, 0, 0, 4],
+                margin: [12, 1, 0, 4],
               },
             ],
           })),
         ],
+        margin: [0, 0, 0, 6],
       })),
 
       // Education
@@ -71,15 +68,14 @@ export const generateResumePdf = (cv: CvType) => {
         stack: [
           {
             text: edu.institution,
-            style: "companyTitle", // reuse or create education-specific style
-            margin: [0, 8, 0, 2],
+            style: "companyTitle",
           },
           {
             text: `${edu.degree} (${edu.start_date} - ${edu.end_date})`,
             style: "roleTitle",
-            margin: [10, 0, 0, 6],
           },
         ],
+        margin: [0, 0, 0, 6],
       })),
 
       // Certifications
@@ -89,45 +85,61 @@ export const generateResumePdf = (cv: CvType) => {
           {
             text: cert.institution,
             style: "companyTitle",
-            margin: [0, 8, 0, 2],
           },
           {
             text: `${cert.name} (${cert.date})`,
             style: "roleTitle",
-            margin: [10, 0, 0, 6],
           },
         ],
+        margin: [0, 0, 0, 6],
       })),
     ],
 
     styles: {
-      name: { fontSize: 22, bold: true, color: COLORS.primary },
+      name: {
+        fontSize: 22,
+        bold: true,
+        color: COLORS.primary,
+        margin: [0, 0, 0, 1],
+      },
       title: {
         fontSize: 16,
         italics: true,
-        margin: [0, 0, 0, 5],
+        margin: [0, 0, 0, 4],
         color: COLORS.primary,
       },
-      contact: { fontSize: 10, margin: [0, 0, 0, 10] },
+      contact: {
+        fontSize: 10,
+        margin: [0, 0, 0, 10],
+      },
       sectionHeader: {
         fontSize: 14,
         color: COLORS.primary,
         bold: true,
-        margin: [0, 10, 0, 5],
+        margin: [0, 8, 0, 4],
       },
-      roleTitle: { fontSize: 12, bold: true, margin: [0, 5, 0, 2] },
-      companyTitle: {
-        fontSize: 12,
-        bold: true,
-        margin: [0, 10, 0, 4],
-        italics: true,
-      },
-      text: { fontSize: 11, margin: [0, 0, 0, 2] },
-      text_underline: {
+      roleTitle: {
         fontSize: 11,
-        margin: [50, 20, 10, 2],
         bold: true,
-        decoration: "underline",
+        margin: [0, 3, 0, 1],
+        lineHeight: 1.15,
+      },
+      companyTitle: {
+        fontSize: 11,
+        italics: true,
+        margin: [0, 0, 0, 1],
+        lineHeight: 1.15,
+      },
+      text: {
+        fontSize: 11,
+        margin: [0, 0, 0, 1],
+        lineHeight: 1.25,
+      },
+      skillHighlight: {
+        fontSize: 11,
+        margin: [0, 0, 0, 1],
+        bold: true,
+        lineHeight: 1.25,
       },
     },
   };
