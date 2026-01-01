@@ -1,5 +1,5 @@
 export const COLORS = {
-  primary: "#2c3e50",
+  primary: "#079fc0",
   secondary: "#34495e",
   text: "#333333",
   lightText: "#7f8c8d",
@@ -24,10 +24,10 @@ export const FONTS = {
 };
 
 export const SPACING = {
-  sectionGap: 8, // space after a section body
-  itemGap: 6, // space between items (roles, certs)
-  tight: 3, // small visual separation
-};
+  tight: 4, // Between title and subtitle
+  normal: 6, // Between related content (company + roles)
+  section: 8, // Between different sections
+} as const;
 
-export const PAGE_MARGIN = 25;
-export const SPACING_BETWEEN_SECTIONS = 5;
+export const BULLET_INDENT = 4; // Bullet point indentation
+export const PAGE_MARGIN = 24;

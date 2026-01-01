@@ -4,7 +4,7 @@ export const cvSample = {
     location: "Alexandria, Egypt",
     phone: "201276900621",
     email: "shehab.elhariry@hotmail.com",
-    linkedin: "linkedin.com/in/shehabelhariry",
+    linkedin: "http://linkedin.com/in/shehabelhariry",
   },
   title: "Frontend Engineer",
   summary:
