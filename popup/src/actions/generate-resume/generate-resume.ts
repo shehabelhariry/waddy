@@ -14,9 +14,7 @@ export const generateResumePdf = (cv: CvType) => {
       { text: cv.name, style: "name" },
       { text: cv.title, style: "title" },
       {
-        text: [
-          `${cv.contact.location} | ${cv.contact.phone} | ${cv.contact.email} | ${cv.contact.linkedin}`,
-        ],
+        text: [`${cv.contact.email} • ${cv.contact.linkedin}`],
         style: "contact",
       },
 
@@ -57,6 +55,7 @@ export const generateResumePdf = (cv: CvType) => {
                 margin: [12, 1, 0, 4],
               },
             ],
+            margin: [10, 0, 0, 0],
           })),
         ],
         margin: [0, 0, 0, 6],
@@ -129,6 +128,7 @@ export const generateResumePdf = (cv: CvType) => {
         italics: true,
         margin: [0, 0, 0, 1],
         lineHeight: 1.15,
+        color: "#555555",
       },
       text: {
         fontSize: 11,
