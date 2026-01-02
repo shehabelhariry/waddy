@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { JobData } from "../../types";
 import { chrome } from "../../const";
-import { CvType } from "../../baseCV";
 import JobCard from "./job-card";
 import ActionButtons from "./action-buttons/action-buttons";
 import { getCvFromStorage } from "../../storage";
 import CvIndicator from "./cv-indicator";
 import { useApiKeyContext } from "../../contexts/api-key-context";
+import { CV } from "../../actions/generate-resume/types";
 
 const JobTracker = () => {
   const { openApiKey } = useApiKeyContext();
   const [jobData, setJobData] = useState<JobData | null>(null);
-  const [cvObject, setCvObject] = useState<CvType | undefined>(undefined);
+  const [cvObject, setCvObject] = useState<CV | undefined>(undefined);
 
   useEffect(() => {
     // Send message to content script to extract job data

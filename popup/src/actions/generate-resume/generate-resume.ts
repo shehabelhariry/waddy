@@ -1,13 +1,13 @@
 // Based on: https://pdfmake.github.io/docs/0.3/document-definition-object/styling/
 
-import { CvType } from "../../baseCV";
 //@ts-ignore
 import pdfMake from "pdfmake/build/pdfmake";
 import "pdfmake/build/vfs_fonts";
 import { COLORS } from "./const";
+import { CV } from "./types";
 
 // Example function to generate CV PDF
-export const generateResumePdf = (cv: CvType) => {
+export const generateResumePdf = (cv: CV) => {
   const docDefinition = {
     content: [
       // Header
@@ -37,45 +37,53 @@ export const generateResumePdf = (cv: CvType) => {
 
       // Experience
       { text: "Experience", style: "sectionHeader" },
-      ...cv.experience.map((exp) => ({
-        stack: [
-          {
-            text: exp.company + (exp.location ? ` - ${exp.location}` : ""),
-            style: "companyTitle",
-          },
-          ...exp.roles.map((role) => ({
-            stack: [
-              {
-                text: `${role.title} (${role.start_date} - ${role.end_date})`,
-                style: "roleTitle",
-              },
-              {
-                ul: role.responsibilities,
-                style: "text",
-                margin: [12, 1, 0, 4],
-              },
-            ],
-            margin: [10, 0, 0, 0],
-          })),
-        ],
-        margin: [0, 0, 0, 6],
-      })),
+      ...cv.experience
+        .filter(
+          (exp) =>
+            exp.relevance !== "low" ||
+            exp.roles.some((role) => role.relevance !== "low")
+        )
+        .map((exp) => ({
+          stack: [
+            {
+              text: exp.company + (exp.location ? ` - ${exp.location}` : ""),
+              style: "companyTitle",
+            },
+            ...exp.roles.map((role) => ({
+              stack: [
+                {
+                  text: `${role.title} (${role.start_date} - ${role.end_date})`,
+                  style: "roleTitle",
+                },
+                {
+                  ul: role.responsibilities,
+                  style: "text",
+                  margin: [12, 1, 0, 4],
+                },
+              ],
+              margin: [10, 0, 0, 0],
+            })),
+          ],
+          margin: [0, 0, 0, 6],
+        })),
 
       // Education
       { text: "Education", style: "sectionHeader" },
-      ...cv.education.map((edu) => ({
-        stack: [
-          {
-            text: edu.institution,
-            style: "companyTitle",
-          },
-          {
-            text: `${edu.degree} (${edu.start_date} - ${edu.end_date})`,
-            style: "roleTitle",
-          },
-        ],
-        margin: [0, 0, 0, 6],
-      })),
+      ...cv.education
+        .filter((exp) => exp.relevance !== "low")
+        .map((edu) => ({
+          stack: [
+            {
+              text: edu.institution,
+              style: "companyTitle",
+            },
+            {
+              text: `${edu.degree} (${edu.start_date} - ${edu.end_date})`,
+              style: "roleTitle",
+            },
+          ],
+          margin: [0, 0, 0, 6],
+        })),
 
       // Certifications
       { text: "Certifications", style: "sectionHeader" },
@@ -86,7 +94,7 @@ export const generateResumePdf = (cv: CvType) => {
             style: "companyTitle",
           },
           {
-            text: `${cert.name} (${cert.date})`,
+            text: `${cert.name} ${cert.date ? `(${cert.date})` : ""}`,
             style: "roleTitle",
           },
         ],

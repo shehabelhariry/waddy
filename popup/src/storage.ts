@@ -1,4 +1,4 @@
-import { CvType } from "./baseCV";
+import { CV } from "./actions/generate-resume/types";
 import { chrome } from "./const";
 
 const CV_STORAGE_KEY = "waddyCV" as const;
@@ -6,14 +6,14 @@ const OPEN_AI_API_KEY_STORAGE_KEY = "waddyOpenAIApiKey" as const;
 
 const CHROME_STORAGE_POLICY: "sync" | "local" = "sync";
 
-async function setCvInStorage(cv: CvType | undefined) {
+async function setCvInStorage(cv: CV | undefined) {
   storage(CV_STORAGE_KEY).set(JSON.stringify(cv));
 }
 
 async function getCvFromStorage() {
   const cvString = await storage(CV_STORAGE_KEY).get();
   if (cvString) {
-    return JSON.parse(cvString) as CvType;
+    return JSON.parse(cvString) as CV;
   }
   return undefined;
 }

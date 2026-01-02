@@ -1,12 +1,12 @@
 import UploadCVButton from "./upload-cv-button";
-import { CvType } from "../../../baseCV";
 import CreateTailoredCVButton from "./create-tailored-cv-button";
 import { JobData } from "../../../types";
 import { isDebugMode } from "../../../const";
+import { CV } from "../../../actions/generate-resume/types";
 
 interface ActionButtonsProps {
-  setCvObject: (cv: CvType | undefined) => void;
-  cvObject?: CvType | null;
+  setCvObject: (cv: CV | undefined) => void;
+  cvObject?: CV | null;
   jobData?: JobData;
 }
 

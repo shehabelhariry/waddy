@@ -1,13 +1,14 @@
-import { cvSample, CvType } from "../../../baseCV";
+import { cvSample } from "../../../baseCV";
 import { callLLM, extractTextBetweenTags, loadPrompt } from "../../../utils";
 import { Button } from "antd";
 import { useState } from "react";
 import { JobData } from "../../../types";
 import { generateResumePdf } from "../../../actions/generate-resume/generate-resume";
 import { isDebugMode } from "../../../const";
+import { CV } from "../../../actions/generate-resume/types";
 
 interface CreateTailoredCVButtonProps {
-  cvObject?: CvType | null;
+  cvObject?: CV | null;
   jobData?: JobData;
 }
 
@@ -41,9 +42,11 @@ export default function CreateTailoredCVButton({
           prompt: prompt,
         });
 
-        let resume: CvType = JSON.parse(
+        let resume: CV = JSON.parse(
           extractTextBetweenTags(resp, "new_cv") || "{}"
         );
+
+        console.log("Generated Resume:", resume);
 
         generateResumePdf(resume);
         setIsAiLoading(false);

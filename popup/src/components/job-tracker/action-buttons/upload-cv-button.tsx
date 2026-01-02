@@ -8,12 +8,12 @@ import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { message } from "antd";
 import { getCvJsonFromExtractedText } from "../../../actions/actions";
 import { setCvInStorage } from "../../../storage";
-import { CvType } from "../../../baseCV";
+import { CV } from "../../../actions/generate-resume/types";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 interface UploadCvButtonProps {
-  setCvObject: (cv: CvType) => void;
+  setCvObject: (cv: CV) => void;
 }
 
 export default function UploadCVButton({ setCvObject }: UploadCvButtonProps) {

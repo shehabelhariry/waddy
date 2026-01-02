@@ -1,11 +1,11 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { CvType } from "../../baseCV";
 import { Button, Space, Typography } from "antd";
 import { removeCvFromStorage } from "../../storage";
+import { CV } from "../../actions/generate-resume/types";
 
 interface CvIndicatorProps {
-  cvObject: CvType | undefined;
-  setCvObject: (cv: CvType | undefined) => void;
+  cvObject: CV | undefined;
+  setCvObject: (cv: CV | undefined) => void;
 }
 export default function CvIndicator({
   cvObject,

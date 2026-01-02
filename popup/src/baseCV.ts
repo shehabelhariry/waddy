@@ -1,4 +1,6 @@
-export const cvSample = {
+import { CV } from "./actions/generate-resume/types";
+
+export const cvSample: CV = {
   name: "Shehab Elhariry",
   contact: {
     location: "Alexandria, Egypt",
@@ -103,5 +105,3 @@ export const cvSample = {
     },
   ],
 };
-
-export type CvType = typeof cvSample;
