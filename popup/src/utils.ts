@@ -1,3 +1,5 @@
+import { getApiKeyFromStorage } from "./storage";
+
 export const callLLM = async ({
   system,
   prompt,
@@ -5,11 +7,13 @@ export const callLLM = async ({
   system: string;
   prompt: string;
 }) => {
+  const apiKey = await getApiKeyFromStorage();
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "gpt-4.1-mini",

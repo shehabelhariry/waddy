@@ -1,57 +1,31 @@
 You are given:
-1. A JSON object representing my current CV between `<cv></cv>` tags
-2. A job description between `<job></job>` tags
+1. A JSON object representing my CV between <cv></cv>
+2. A job description between <job></job>
 
-Generate a tailored version of my CV that specifically addresses the job requirements and return the new JSON between `<new_cv></new_cv>` tags.
+Generate a tailored version of my CV optimized for the given job.
 
-## Optimization Guidelines
+Guidelines:
+- Emphasize experience, skills, and achievements most relevant to the job description
+- Reorder and rephrase existing content to better match the role
+- Use keywords and phrasing from the job description where appropriate
+- Remove or de-emphasize less relevant information
+- Keep the overall length and structure roughly the same
+- Skills section should contain only the most relevant 4-6 skills
+- Title should be a reflection of what's needed.
+- Summary should be short (1-3) sentences.
 
-### 1. Skills
-- **Reorder** skills to prioritize those mentioned in the job description
-- **Add** relevant skills from my CV that weren't previously listed if they match the job
-- **Remove** skills that are least relevant to this specific position
-- Keep the skills array concise (aim for 4-6 items)
-- **Source of truth**: Only use skills present in the original CV
 
-### 2. Summary
-- Incorporate 2-3 key terms/phrases from the job description naturally
-- Highlight specific strengths that directly match their requirements
-- Maintain professional tone
-- Focus on achievements and capabilities most relevant to this role
-
-### 3. Experience
-- **Reorder responsibilities** within each role to prioritize relevant ones first
-- **Remove irrelevant responsibilities** within each role
-- **Expand** on relevant projects/responsibilities with more detail
-- **Quantify** achievements where possible (percentages, time saved, team size, etc.)
-- **Mirror language** from job requirements when describing accomplishments
-- **De-emphasize** (but don't remove) less relevant responsibilities by moving them to the end or shortening them
-
-### 4. Education & Certifications
-- Highlight relevant coursework, certifications, or specializations that align with the position
-- Keep all existing education/certifications but reorder if some are more relevant
-
-### 5. Overall Structure
+Strict rules:
+- Use ONLY information already present in the original CV
+- Do NOT invent skills, experiences, companies, or metrics
+- Do NOT add new technologies not listed in the CV
 - Maintain the exact JSON structure and field names
-- Keep approximate character count in each major section (±20%)
-- Ensure all required fields from the original CV are present
+- Remove all experiences that are not relevant to the job description
 
-## Critical Rules
-- ❌ **DO NOT** invent experiences, skills, qualifications, or achievements
-- ❌ **DO NOT** add experiences at companies I haven't worked at
-- ❌ **DO NOT** fabricate metrics or numbers
-- ❌ **DO NOT** claim proficiency in technologies not in my original CV
-- ✅ **DO** reorganize, rephrase, and emphasize existing information
-- ✅ **DO** use keywords from the job description in descriptions
-- ✅ **DO** quantify existing achievements where the context supports it
-- ✅ **DO** maintain truthfulness while optimizing presentation
-
-## Output Requirements
-- Return ONLY valid JSON that can be parsed by `JSON.parse()`
-- Do not include markdown code fences or any text outside the `<new_cv></new_cv>` tags
-- Preserve all field types (strings, arrays, objects, null values)
-- Ensure proper JSON escaping for special characters
+Output:
+- Return ONLY valid JSON wrapped in <new_cv></new_cv>
+- No text outside the tags
+- Ensure the output can be parsed by JSON.parse()
 
 <cv>{{cv}}</cv>
-
 <job>{{job}}</job>

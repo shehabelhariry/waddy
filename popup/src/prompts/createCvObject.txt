@@ -7,7 +7,7 @@ Convert this CV into a structured JSON object following the schema below.
 
 ## Instructions
 - Only include sections where you find matching information in the CV text
-- Set missing fields to null (do not omit them or use empty strings)
+- Set missing fields to empty string (do not omit them or use null)
 - For date fields, use format "MMM YYYY" (e.g., "Jan 2024") or "Present" for current positions
 - For arrays (skills, experience, education), only include items you can extract from the text
 - Preserve exact field names and structure from the schema
