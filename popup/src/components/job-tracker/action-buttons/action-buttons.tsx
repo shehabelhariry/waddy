@@ -24,6 +24,13 @@ export default function ActionButtons({
       {shouldShowCreateTailoredCVButton && (
         <CreateTailoredCVButton cvObject={cvObject} jobData={jobData} />
       )}
+      {/* {cvObject && jobData && (
+        <Button
+          onClick={() => handleGenerateJobScore(jobData.description, cvObject)}
+        >
+          Generate Job Score{" "}
+        </Button>
+      )} */}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   loadPrompt,
 } from "../utils";
 import { cvSample } from "../baseCV";
+import { CV } from "./generate-resume/types";
 
 export const getCvJsonFromExtractedText = async (extractedText: string) => {
   const prompt = await loadPrompt("createCvObject.txt", {
@@ -93,4 +94,22 @@ export const handleSaveJob = async ({
   } else {
     alert("❌ Failed to save job.");
   }
+};
+
+export const handleGenerateJobScore = async (
+  jobDescription: string,
+  cv: CV
+) => {
+  const prompt = await loadPrompt("generateJobScore.txt", {
+    job_description: jobDescription,
+    cv: JSON.stringify(cv, null, 2),
+  });
+
+  const response = await callLLM({
+    system: `You are an expert career advisor who can rate how well a CV matches a job description.`,
+    prompt,
+  });
+
+  const assessment = extractTextBetweenTags(response, "assessment") || "N/A";
+  console.log("Job Match Assessment:", assessment);
 };
