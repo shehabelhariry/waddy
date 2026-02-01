@@ -1,4 +1,4 @@
-# Land Your Job Chrome Extension
+# Land Your Job (Waddy) Chrome Extension 
 
 ## Overview
 
