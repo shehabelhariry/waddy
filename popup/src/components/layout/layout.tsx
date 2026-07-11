@@ -15,14 +15,14 @@ function linkClass({
 export default function Layout() {
   return (
     <div className="main-layout">
-      <div className="side-nav">
+      <nav className="top-nav">
         <NavLink
           className={({ isActive, isPending }) =>
             linkClass({ isActive, isPending })
           }
           to="/"
         >
-          <HomeOutlined size={40} style={{ fontSize: 24 }} />
+          <HomeOutlined style={{ fontSize: 22 }} />
         </NavLink>
         <NavLink
           className={({ isActive, isPending }) =>
@@ -30,9 +30,9 @@ export default function Layout() {
           }
           to="/settings"
         >
-          <SettingOutlined size={40} style={{ fontSize: 24 }} />
+          <SettingOutlined style={{ fontSize: 22 }} />
         </NavLink>
-      </div>
+      </nav>
       <div className="main-content">
         <div className="header">
           <div className="logo-container">

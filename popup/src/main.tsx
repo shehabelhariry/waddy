@@ -13,9 +13,14 @@ createRoot(document.getElementById("root")!).render(
     <Router>
       <ConfigProvider
         theme={{
-          algorithm: theme.darkAlgorithm,
+          algorithm: theme.defaultAlgorithm,
           token: {
-            colorPrimary: "#079fc0",
+            colorPrimary: "#603297",
+            colorInfo: "#603297",
+            colorLink: "#603297",
+            colorText: "#0a083b",
+            colorTextHeading: "#0a083b",
+            borderRadius: 8,
           },
         }}
       >

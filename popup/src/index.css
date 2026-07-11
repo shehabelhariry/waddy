@@ -1,5 +1,12 @@
 /* popup.css */
 
+/* Brand palette:
+   --navy   #0a083b  (text, navigation bar)
+   --purple #603297  (primary, links, accents)
+   --yellow #f6d105  (call-to-action highlight, active nav)
+   Surfaces: white background + white cards.
+*/
+
 #root {
   min-width: 400px;
   min-height: 500px;
@@ -9,9 +16,9 @@
 
 body {
   font-family: "Arial", sans-serif;
-  color: #e0e0e0;
+  color: #0a083b;
   text-align: center;
-  background-color: #2d2d2d;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +41,7 @@ body {
 .ai-title {
   font-size: 2em;
   font-weight: bold;
-  color: #00f5d4;
+  color: #603297;
   margin-bottom: 30px;
 }
 
@@ -43,19 +50,19 @@ body {
 }
 
 .logo-container img {
-  width: 200px;
-  height: 50px;
-  object-fit: cover;
+  width: 160px;
+  height: auto;
+  object-fit: contain;
 }
 
 h2,
 h3 {
   margin: 10px 0;
-  color: #ffffff;
+  color: #0a083b;
 }
 
 pre {
-  background: rgba(255, 255, 255, 0.1);
+  background: #f5f3fa;
   padding: 10px;
   border-radius: 5px;
   font-size: 0.9em;
@@ -63,7 +70,7 @@ pre {
   overflow-y: auto;
   width: 100%;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e7e3f2;
 }
 
 .button-container {
@@ -75,19 +82,29 @@ pre {
   width: 100%;
 }
 
+/* Primary call-to-action: yellow with navy text (the "lightning" accent). */
 .ai-button {
   width: 200px;
+  background-color: #f6d105 !important;
+  border-color: #f6d105 !important;
+  color: #0a083b !important;
+  font-weight: 600;
+}
+.ai-button:hover {
+  background-color: #ffde2e !important;
+  border-color: #ffde2e !important;
+  color: #0a083b !important;
 }
 
 /* card */
 .job-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
   border-radius: 8px;
   padding: 10px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 2px 6px #079fc0;
-  border: 1px solid #079fc0;
+  box-shadow: 0 2px 8px rgba(96, 50, 151, 0.12);
+  border: 1px solid #e7e3f2;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
@@ -100,54 +117,44 @@ pre {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  border: 2px solid #e7e3f2;
+  box-shadow: 0 0 4px rgba(10, 8, 59, 0.1);
 }
 
 .job-title {
   font-size: 1.2em;
   font-weight: bold;
-  color: #ffffff;
+  color: #0a083b;
   margin: 3px 0;
 }
 
 .company-name {
   font-size: 1em;
-  color: #079fc0;
+  color: #603297;
   margin: 0;
 }
 
 .job-location {
   font-size: 0.9em;
-  color: #c0c0c0;
+  color: #5b5772;
   margin-top: 5px;
   padding: 5px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #f5f3fa;
   border-radius: 5px;
   width: fit-content;
 }
 
-/* New Styles for layout */
+/* Layout: content on top, nav pinned to the bottom */
 .main-layout {
   width: 100%;
-  min-height: 100%;
-  display: flex;
-}
-
-.side-nav {
-  width: 64px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 100vh;
-  background-color: #1d1d1d;
-  padding: 20px 0;
-  box-sizing: border-box;
 }
 
 .main-content {
-  width: calc(100% - 64px);
+  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -156,21 +163,42 @@ pre {
   padding: 0 10px;
   flex: 1;
 }
-/* Links Style */
 
-a.link-primary {
-  color: #079fc0;
-  text-decoration: underline;
+/* Top navigation bar (navy) */
+.top-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 56px;
+  background-color: #0a083b;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
 }
-a.active {
-  color: #079fc0;
-  text-decoration: none;
-  border: 1px solid #079fc0;
+.top-nav a {
+  color: #cfc8e6;
+  padding: 8px 18px;
   border-radius: 10px;
-  background-color: rgba(200, 255, 255, 0.186);
+  display: flex;
+  align-items: center;
 }
+.top-nav a:hover {
+  color: #ffffff;
+}
+.top-nav a.active {
+  color: #f6d105;
+  background-color: rgba(246, 209, 5, 0.14);
+}
+
+/* Links */
 a {
-  color: #fff;
-  padding: 10px;
+  color: #603297;
   text-decoration: none;
+}
+a.link-primary {
+  color: #603297;
+  text-decoration: underline;
 }
