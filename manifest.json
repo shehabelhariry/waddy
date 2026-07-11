@@ -6,7 +6,6 @@
   "permissions": ["activeTab", "storage"],
   "host_permissions": [
     "https://www.linkedin.com/jobs/*",
-    "https://script.google.com/macros/s/*",
     "https://openrouter.ai/*"
   ],
   "background": {

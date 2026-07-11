@@ -46,9 +46,7 @@ export const handleCoverLetter = async (
 
     setMatchScore(score);
 
-    // Give the user the letter first, then persist (fire-and-forget).
     downloadText(letter, `${jobData.company}.txt`);
-    handleSaveJob({ jobData, score, coverLetter: letter });
   } catch (err) {
     console.error("Cover letter generation failed:", err);
     alert(
@@ -56,46 +54,5 @@ export const handleCoverLetter = async (
     );
   } finally {
     setLoading(false);
-  }
-};
-
-interface HandleSaveJobArgs {
-  jobData: JobData;
-  score: string | null;
-  coverLetter: string | null;
-}
-
-export const handleSaveJob = async ({
-  jobData,
-  score,
-  coverLetter,
-}: HandleSaveJobArgs) => {
-  if (!jobData) return alert("No job data available");
-
-  try {
-    await fetch(import.meta.env.VITE_SHEET_APP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jobTitle: jobData.title,
-        company: jobData.company,
-        location: jobData.location,
-        description: jobData.description,
-        dateAdded: new Date().toISOString().split("T")[0], // Save date
-        url: jobData.jobUrl,
-        score: score,
-        coverLetter,
-      }),
-    });
-
-    // `no-cors` returns an opaque response — we can't read its status or body,
-    // so treat a request that didn't throw as success.
-    alert("✅ Job saved to Google Sheets!");
-  } catch (err) {
-    console.error("Failed to save job:", err);
-    alert("❌ Failed to save job.");
   }
 };

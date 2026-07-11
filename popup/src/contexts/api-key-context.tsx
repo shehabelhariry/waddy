@@ -18,12 +18,7 @@ const ApiKeyContext = createContext<ApiKeyContextType | null>(null);
 export default ApiKeyContext;
 
 export const ApiKeyProvider = ({ children }: { children: React.ReactNode }) => {
-  const [apiKey, setApiKey] = useState<string | null>(
-    () =>
-      import.meta.env.VITE_OPENROUTER_API_KEY ||
-      import.meta.env.VITE_OPENAI_API_KEY ||
-      null
-  );
+  const [apiKey, setApiKey] = useState<string | null>(null);
   const [modelId, setModelId] = useState<string>(DEFAULT_MODEL_ID);
 
   useEffect(() => {
