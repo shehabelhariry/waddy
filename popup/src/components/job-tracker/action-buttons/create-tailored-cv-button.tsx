@@ -1,5 +1,6 @@
 import { cvSample } from "../../../baseCV";
-import { callLLM, extractTextBetweenTags, loadPrompt } from "../../../utils";
+import { extractTextBetweenTags, loadPrompt } from "../../../utils";
+import { callLLM } from "../../../llm/client";
 import { Button } from "antd";
 import { useState } from "react";
 import { JobData } from "../../../types";

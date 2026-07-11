@@ -2,7 +2,13 @@ import { CV } from "./actions/generate-resume/types";
 import { chrome } from "./const";
 
 const CV_STORAGE_KEY = "waddyCV" as const;
-const OPEN_AI_API_KEY_STORAGE_KEY = "waddyOpenAIApiKey" as const;
+const API_KEY_STORAGE_KEY = "waddyApiKey" as const;
+const MODEL_ID_STORAGE_KEY = "waddyModelId" as const;
+
+type StorageKey =
+  | typeof CV_STORAGE_KEY
+  | typeof API_KEY_STORAGE_KEY
+  | typeof MODEL_ID_STORAGE_KEY;
 
 const CHROME_STORAGE_POLICY: "sync" | "local" = "sync";
 
@@ -22,38 +28,48 @@ async function removeCvFromStorage() {
   await storage(CV_STORAGE_KEY).clear();
 }
 
-// Handle OpenAI API Key Storage
+// Handle API Key Storage
 async function setApiKeyInStorage(apiKey: string | null) {
   if (apiKey === null) return;
-  storage(OPEN_AI_API_KEY_STORAGE_KEY).set(apiKey);
+  storage(API_KEY_STORAGE_KEY).set(apiKey);
 }
 
 async function getApiKeyFromStorage() {
-  const apiKeyString = await storage(OPEN_AI_API_KEY_STORAGE_KEY).get();
+  const apiKeyString = await storage(API_KEY_STORAGE_KEY).get();
   if (apiKeyString) {
     return apiKeyString;
   }
   return null;
 }
 
-function storage(
-  key: typeof CV_STORAGE_KEY | typeof OPEN_AI_API_KEY_STORAGE_KEY
-) {
-  if (chrome?.storage?.[key]) {
+// Handle selected model id storage
+async function setModelIdInStorage(modelId: string | null) {
+  if (modelId === null) return;
+  storage(MODEL_ID_STORAGE_KEY).set(modelId);
+}
+
+async function getModelIdFromStorage() {
+  const modelId = await storage(MODEL_ID_STORAGE_KEY).get();
+  if (modelId) {
+    return modelId;
+  }
+  return null;
+}
+
+function storage(key: StorageKey) {
+  if (chrome?.storage?.[CHROME_STORAGE_POLICY]) {
     // Could be 'sync' or 'local'
     const storageHandler = chrome.storage[CHROME_STORAGE_POLICY];
     return {
       set: (value: string) => {
-        storageHandler.set({
-          [CV_STORAGE_KEY]: value,
-        });
+        storageHandler.set({ [key]: value });
       },
       get: async () => {
         const result = await storageHandler.get([key]);
         return result[key];
       },
       clear: async () => {
-        await storageHandler.clear();
+        await storageHandler.remove([key]);
       },
     };
   }
@@ -71,4 +87,6 @@ export {
   removeCvFromStorage,
   setApiKeyInStorage,
   getApiKeyFromStorage,
+  setModelIdInStorage,
+  getModelIdFromStorage,
 };

@@ -9,7 +9,7 @@ import { useApiKeyContext } from "../../contexts/api-key-context";
 import { CV } from "../../actions/generate-resume/types";
 
 const JobTracker = () => {
-  const { openApiKey } = useApiKeyContext();
+  const { apiKey } = useApiKeyContext();
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [cvObject, setCvObject] = useState<CV | undefined>(undefined);
 
@@ -42,11 +42,11 @@ const JobTracker = () => {
     fetchCv();
   }, []);
 
-  if (!openApiKey) {
+  if (!apiKey) {
     return (
       <div className="popup-container">
         <p>
-          Please set your OpenAI API key in settings to use the Job Tracker.
+          Please set your OpenRouter API key in settings to use the Job Tracker.
         </p>
       </div>
     );

@@ -1,10 +1,6 @@
 import { JobData } from "../types";
-import {
-  callLLM,
-  downloadText,
-  extractTextBetweenTags,
-  loadPrompt,
-} from "../utils";
+import { downloadText, extractTextBetweenTags, loadPrompt } from "../utils";
+import { callLLM } from "../llm/client";
 import { cvSample } from "../baseCV";
 import { CV } from "./generate-resume/types";
 

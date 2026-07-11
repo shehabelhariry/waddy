@@ -1,34 +1,3 @@
-import { getApiKeyFromStorage } from "./storage";
-
-export const callLLM = async ({
-  system,
-  prompt,
-}: {
-  system: string;
-  prompt: string;
-}) => {
-  const apiKey = await getApiKeyFromStorage();
-
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4.1-mini",
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: prompt },
-      ],
-      max_tokens: 5000,
-    }),
-  });
-
-  const data = await response.json();
-  return data.choices[0].message.content.trim();
-};
-
 export const downloadText = (text: string, filename: string) => {
   const blob = new Blob([text], { type: "text/plain" });
   const a = document.createElement("a");

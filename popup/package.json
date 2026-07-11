@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
+    "@openrouter/ai-sdk-provider": "^3.0.0",
+    "ai": "^7.0.22",
     "antd": "^5.25.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
