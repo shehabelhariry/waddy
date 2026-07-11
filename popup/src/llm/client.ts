@@ -35,7 +35,11 @@ export const callLLM = async ({
     model,
     system,
     prompt,
-    maxOutputTokens: 5000,
+    // Modest cap: high enough for our outputs (a cover letter / CV JSON), but
+    // low enough that OpenRouter's credit reservation stays cheap and it fits
+    // ordinary context windows. Omitting it makes the model reserve its full
+    // max output (e.g. 65k), which fails on low balances.
+    maxOutputTokens: 4000,
   });
 
   return text.trim();
