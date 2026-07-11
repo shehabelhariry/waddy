@@ -1,5 +1,3 @@
-let viewedCompanies = {};
-
 const parentSelector = ".jobs-search__job-details--container";
 
 const selectors = {
@@ -50,7 +48,6 @@ function extractJobDetails(parentElem) {
     const jobData = {
       company,
       title: jobTitleElem.innerText.trim(),
-      mainInfo: mainJobInfoElem.innerText.trim(),
       description: jobDescriptionElem.innerText.trim(),
       url: window.location.href,
       imageUrl: companyImageElem.getAttribute("src"),
@@ -58,16 +55,10 @@ function extractJobDetails(parentElem) {
       jobUrl: "https://www.linkedin.com" + jobURLElem.getAttribute("href"),
     };
 
-    console.log("Extracted job data:", jobData);
-    viewedCompanies = {
-      ...viewedCompanies,
-      [company]: jobData,
-    };
-
     // Send extracted data back to the popup
     chrome.runtime.sendMessage({
       action: "DATA_EXTRACTED",
-      data: { current: jobData, viewedCompanies },
+      data: { current: jobData },
     });
   } else {
     console.log("Some job elements are missing, skipping extraction.");
