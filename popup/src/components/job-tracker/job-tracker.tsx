@@ -21,15 +21,17 @@ const JobTracker = () => {
       }
     });
 
-    // Listen for extracted job data
-    chrome?.runtime?.onMessage.addListener((message: any) => {
+    // Listen for extracted job data. Keep a named reference so the cleanup can
+    // actually remove *this* listener (removeListener() with no args is a no-op).
+    const handleMessage = (message: any) => {
       if (message.action === "DATA_EXTRACTED") {
         setJobData(message.data.current);
       }
-    });
+    };
+    chrome?.runtime?.onMessage.addListener(handleMessage);
 
     return () => {
-      chrome?.runtime?.onMessage.removeListener();
+      chrome?.runtime?.onMessage.removeListener(handleMessage);
     };
   }, []);
 
