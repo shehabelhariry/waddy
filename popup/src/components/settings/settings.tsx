@@ -15,7 +15,7 @@ export default function Settings() {
     <Form
       form={form}
       initialValues={{ apiKey: apiKey!, modelId }}
-      style={{ height: "100%" }}
+      style={{ height: "100%", padding: "20px 16px" }}
       onFinish={(values) => {
         if (values.apiKey) {
           setApiKey?.(values.apiKey);
