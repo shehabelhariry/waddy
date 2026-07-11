@@ -27,29 +27,36 @@ export const handleCoverLetter = async (
 ) => {
   if (!jobData) return;
 
-  const prompt = await loadPrompt("coverLetter.txt", {
-    company: jobData.company,
-    location: jobData.location,
-    description: jobData.description,
-  });
-
   setLoading(true);
 
-  const response = await callLLM({
-    system: `You are a personal consultant helping to draft a cover letter for ${jobData.company}`,
-    prompt,
-  });
+  try {
+    const prompt = await loadPrompt("coverLetter.txt", {
+      company: jobData.company,
+      location: jobData.location,
+      description: jobData.description,
+    });
 
-  let letter = extractTextBetweenTags(response, "letter") || "";
-  let score = extractTextBetweenTags(response, "grade") || null;
+    const response = await callLLM({
+      system: `You are a personal consultant helping to draft a cover letter for ${jobData.company}`,
+      prompt,
+    });
 
-  setMatchScore(score);
+    const letter = extractTextBetweenTags(response, "letter") || "";
+    const score = extractTextBetweenTags(response, "grade") || null;
 
-  handleSaveJob({ jobData, score: score, coverLetter: letter });
+    setMatchScore(score);
 
-  setLoading(false);
-
-  downloadText(letter, `${jobData.company}.txt`);
+    // Give the user the letter first, then persist (fire-and-forget).
+    downloadText(letter, `${jobData.company}.txt`);
+    handleSaveJob({ jobData, score, coverLetter: letter });
+  } catch (err) {
+    console.error("Cover letter generation failed:", err);
+    alert(
+      "Couldn't generate the cover letter. Check your API key and model in Settings."
+    );
+  } finally {
+    setLoading(false);
+  }
 };
 
 interface HandleSaveJobArgs {

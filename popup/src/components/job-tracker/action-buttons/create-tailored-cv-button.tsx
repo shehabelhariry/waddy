@@ -33,24 +33,30 @@ export default function CreateTailoredCVButton({
         }
 
         setIsAiLoading(true);
-        const prompt = await loadPrompt("customizedResume.txt", {
-          cv: JSON.stringify(cvObject, null, 2),
-          job: jobData?.description!,
-        });
+        try {
+          const prompt = await loadPrompt("customizedResume.txt", {
+            cv: JSON.stringify(cvObject, null, 2),
+            job: jobData?.description!,
+          });
 
-        const resp = await callLLM({
-          system: "you are a consultant specialized in creating CVs",
-          prompt: prompt,
-        });
+          const resp = await callLLM({
+            system: "you are a consultant specialized in creating CVs",
+            prompt: prompt,
+          });
 
-        let resume: CV = JSON.parse(
-          extractTextBetweenTags(resp, "new_cv") || "{}"
-        );
+          const resume: CV = JSON.parse(
+            extractTextBetweenTags(resp, "new_cv") || "{}"
+          );
 
-        console.log("Generated Resume:", resume);
-
-        generateResumePdf(resume);
-        setIsAiLoading(false);
+          generateResumePdf(resume);
+        } catch (err) {
+          console.error("Tailored CV generation failed:", err);
+          alert(
+            "Couldn't generate the tailored CV. Check your API key and model in Settings."
+          );
+        } finally {
+          setIsAiLoading(false);
+        }
       }}
     >
       Generate A Tailored CV

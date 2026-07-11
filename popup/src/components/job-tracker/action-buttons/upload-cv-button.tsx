@@ -28,37 +28,51 @@ export default function UploadCVButton({ setCvObject }: UploadCvButtonProps) {
       const { status } = info.file;
 
       if (status !== "uploading") {
-        setCvUploadLoading(true);
         const file = info.fileList[0]?.originFileObj;
-
         if (!file) return;
-        const arrayBuffer = await file.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
 
-        // Load the PDF
-        const loadingTask = pdfjsLib.getDocument({
-          data: uint8Array,
-        });
+        setCvUploadLoading(true);
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const uint8Array = new Uint8Array(arrayBuffer);
 
-        const pdfDocument = await loadingTask.promise;
+          // Load the PDF
+          const loadingTask = pdfjsLib.getDocument({
+            data: uint8Array,
+          });
 
-        // Extract text from all pages
-        let fullText = "";
+          const pdfDocument = await loadingTask.promise;
 
-        for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
-          const page = await pdfDocument.getPage(pageNum);
-          const textContent = await page.getTextContent();
-          // @ts-ignore
-          const pageText = textContent.items.map((item) => item.str).join(" ");
-          fullText += pageText + "\n\n";
+          // Extract text from all pages
+          let fullText = "";
+
+          for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
+            const page = await pdfDocument.getPage(pageNum);
+            const textContent = await page.getTextContent();
+            // @ts-ignore
+            const pageText = textContent.items.map((item) => item.str).join(" ");
+            fullText += pageText + "\n\n";
+          }
+
+          const cv = await getCvJsonFromExtractedText(fullText);
+          if (!cv) {
+            alert(
+              "Couldn't read your CV. Check your API key and model in Settings, then try again."
+            );
+            return;
+          }
+
+          // Setting CV in memory
+          setCvObject(cv);
+          await setCvInStorage(cv);
+        } catch (err) {
+          console.error("CV upload/parsing failed:", err);
+          alert(
+            "Something went wrong processing your CV. Please try again."
+          );
+        } finally {
+          setCvUploadLoading(false);
         }
-
-        const cv = await getCvJsonFromExtractedText(fullText);
-        // Setting CV in memory
-        setCvObject(cv);
-
-        await setCvInStorage(cv);
-        setCvUploadLoading(false);
       }
       if (status === "done") {
         console.log(info.file);
