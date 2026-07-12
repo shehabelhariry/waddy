@@ -3,7 +3,7 @@
   "name": "Waddy - Generate Tailored Resumes",
   "version": "1.0",
   "description": "Waddy helps you land your dream job by generating tailored resumes and cover letters for LinkedIn job postings.",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["storage"],
   "host_permissions": [
     "https://www.linkedin.com/jobs/*",
     "https://openrouter.ai/*"
