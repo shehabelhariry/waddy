@@ -60,7 +60,7 @@ We do not share your data with anyone else.
 
 ## Permissions
 
-- **`activeTab` / host access to `linkedin.com/jobs`** — to read job details from
+- **Host access to `linkedin.com/jobs`** — to read job details from
   the LinkedIn job page you are viewing.
 - **Host access to `openrouter.ai`** — to send generation requests to the AI
   provider using your API key.
