@@ -84,7 +84,11 @@ pre {
 
 /* Primary call-to-action: yellow with navy text (the "lightning" accent). */
 .ai-button {
-  width: 200px;
+  max-width: 100%;
+  height: auto;
+  min-height: 34px;
+  white-space: normal;
+  padding: 6px 18px;
   background-color: #f6d105 !important;
   border-color: #f6d105 !important;
   color: #0a083b !important;

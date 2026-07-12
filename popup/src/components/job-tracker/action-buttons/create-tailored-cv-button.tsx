@@ -1,6 +1,7 @@
 import { cvSample } from "../../../baseCV";
 import { extractTextBetweenTags, loadPrompt } from "../../../utils";
 import { callLLM } from "../../../llm/client";
+import { handleCoverLetter } from "../../../actions/actions";
 import { Button } from "antd";
 import { useState } from "react";
 import { JobData } from "../../../types";
@@ -34,32 +35,40 @@ export default function CreateTailoredCVButton({
 
         setIsAiLoading(true);
         try {
-          const prompt = await loadPrompt("customizedResume.txt", {
-            cv: JSON.stringify(cvObject, null, 2),
-            job: jobData?.description!,
-          });
+          // 1) Tailored resume — its own try/catch so a cover-letter failure
+          // can't cost the user their resume.
+          try {
+            const prompt = await loadPrompt("customizedResume.txt", {
+              cv: JSON.stringify(cvObject, null, 2),
+              job: jobData?.description!,
+            });
 
-          const resp = await callLLM({
-            system: "you are a consultant specialized in creating CVs",
-            prompt: prompt,
-          });
+            const resp = await callLLM({
+              system: "you are a consultant specialized in creating CVs",
+              prompt: prompt,
+            });
 
-          const resume: CV = JSON.parse(
-            extractTextBetweenTags(resp, "new_cv") || "{}"
-          );
+            const resume: CV = JSON.parse(
+              extractTextBetweenTags(resp, "new_cv") || "{}"
+            );
 
-          await generateResumePdf(resume);
-        } catch (err) {
-          console.error("Tailored CV generation failed:", err);
-          alert(
-            "Couldn't generate the tailored CV. Check your API key and model in Settings."
-          );
+            await generateResumePdf(resume);
+          } catch (err) {
+            console.error("Tailored CV generation failed:", err);
+            alert(
+              "Couldn't generate the tailored CV. Check your API key and model in Settings."
+            );
+          }
+
+          // 2) Cover letter — independent; handleCoverLetter has its own error
+          // handling and downloads the letter.
+          await handleCoverLetter(jobData!, () => {}, () => {});
         } finally {
           setIsAiLoading(false);
         }
       }}
     >
-      Generate A Tailored CV
+      Generate Resume &amp; Cover Letter
     </Button>
   );
 }
