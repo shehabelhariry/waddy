@@ -28,7 +28,7 @@ export default function CreateTailoredCVButton({
       onClick={async () => {
         // Debug mode to test resume generation without LLM calls
         if (isDebugMode) {
-          generateResumePdf(cvSample);
+          await generateResumePdf(cvSample);
           return;
         }
 
@@ -48,7 +48,7 @@ export default function CreateTailoredCVButton({
             extractTextBetweenTags(resp, "new_cv") || "{}"
           );
 
-          generateResumePdf(resume);
+          await generateResumePdf(resume);
         } catch (err) {
           console.error("Tailored CV generation failed:", err);
           alert(

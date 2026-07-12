@@ -1,13 +1,16 @@
 // Based on: https://pdfmake.github.io/docs/0.3/document-definition-object/styling/
 
-//@ts-ignore
-import pdfMake from "pdfmake/build/pdfmake";
-import "pdfmake/build/vfs_fonts";
 import { COLORS } from "./const";
 import { CV } from "./types";
 
 // Example function to generate CV PDF
-export const generateResumePdf = (cv: CV) => {
+export const generateResumePdf = async (cv: CV) => {
+  // Lazy-load pdfmake (+ its embedded fonts, ~1MB) only when actually
+  // generating a PDF, so it stays out of the popup's initial bundle.
+  // @ts-ignore
+  const { default: pdfMake } = await import("pdfmake/build/pdfmake");
+  // @ts-ignore
+  await import("pdfmake/build/vfs_fonts");
   const docDefinition = {
     content: [
       // Header

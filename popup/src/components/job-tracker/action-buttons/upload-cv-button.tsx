@@ -3,14 +3,10 @@ import { useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { Flex, Space, Spin, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { message } from "antd";
 import { getCvJsonFromExtractedText } from "../../../actions/actions";
 import { setCvInStorage } from "../../../storage";
 import { CV } from "../../../actions/generate-resume/types";
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 interface UploadCvButtonProps {
   setCvObject: (cv: CV) => void;
@@ -33,6 +29,14 @@ export default function UploadCVButton({ setCvObject }: UploadCvButtonProps) {
 
         setCvUploadLoading(true);
         try {
+          // Lazy-load pdf.js only when a CV is actually uploaded, so it stays
+          // out of the popup's initial bundle.
+          const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+          const pdfjsWorker = (
+            await import("pdfjs-dist/build/pdf.worker.mjs?url")
+          ).default;
+          pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
           const arrayBuffer = await file.arrayBuffer();
           const uint8Array = new Uint8Array(arrayBuffer);
 
