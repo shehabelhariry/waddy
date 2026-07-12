@@ -1,141 +1,105 @@
-# Land Your Job (Waddy) Chrome Extension 
+# Waddy — Tailored Resumes & Cover Letters for LinkedIn
 
-## Overview
+Waddy is a Chrome extension (Manifest V3) that turns your CV into a resume and
+cover letter tailored to the exact LinkedIn job you're viewing — using the AI
+model of your choice, with your own API key.
 
-"Land Your Job" is a Chrome extension designed to streamline the job application process on LinkedIn. It enables users to track and manage job applications efficiently by extracting job details, tailoring CVs, and generating cover letters directly within the browser.
+## Features
 
-## Key Features
+- **Job extraction** — reads the title, company, location, and description from
+  the LinkedIn job page you're on (via a content script).
+- **CV upload** — upload your CV as a PDF; its text is extracted in the browser
+  and converted to a structured format, stored in your browser.
+- **One-click generation** — the "Generate Resume & Cover Letter" button produces
+  a tailored resume (PDF) and a cover letter (`.txt`), named
+  `FirstName_LastName_Company_resume.pdf` / `..._cover_letter.txt`.
+- **Bring your own model** — choose any model available through
+  [OpenRouter](https://openrouter.ai) (OpenAI, Anthropic, Google, Llama, …) and
+  supply your own OpenRouter API key.
+- **Private by design** — there is no backend. Your data stays in your browser and
+  is sent only to OpenRouter using your own key. See [`PRIVACY.md`](./PRIVACY.md).
 
-1. **Job Data Extraction**:
+## How it works
 
-   - Automatically extracts job details (title, company, location, description, etc.) from LinkedIn job postings.
-   - Uses content scripts to interact with LinkedIn's DOM and retrieve relevant information.
+1. Open a LinkedIn job page. The content script (`content.js`) reads the job
+   details and sends them to the popup.
+2. Upload your CV once. It's parsed with `pdfjs`, structured by the model, and
+   saved in `chrome.storage.sync`.
+3. Click **Generate Resume & Cover Letter**. The popup sends your CV and the job
+   description to your selected model via OpenRouter, then renders the resume to
+   PDF (`pdfmake`) and downloads the cover letter.
 
-2. **CV Management**:
+## Tech stack
 
-   - Allows users to upload their CVs in PDF format.
-   - Extracts text from the uploaded CV and converts it into a structured JSON format.
-   - Stores the CV data locally or in Chrome's sync storage for easy access.
+- **UI:** React 19 + TypeScript + Ant Design, bundled with Vite.
+- **LLM:** [Vercel AI SDK](https://sdk.vercel.ai) (`ai`) with
+  `@openrouter/ai-sdk-provider`, behind a small provider-agnostic layer
+  (`popup/src/llm/`) so native providers can be added later without a rewrite.
+- **PDF:** `pdfmake` (generate resume), `pdfjs-dist` (read uploaded CV). Both are
+  lazy-loaded so they stay out of the popup's initial bundle.
 
-3. **Tailored CV Generation**:
+## Project structure
 
-   - Integrates with OpenAI's GPT API to generate tailored CVs based on the job description.
-   - Reorganizes and rephrases CV content to highlight relevant skills and experiences.
+```
+manifest.json            Extension manifest (root of the unpacked extension)
+background.js            Minimal service worker
+content.js              Reads job details from LinkedIn job pages
+small_logo.png          Toolbar / store icon
+package-extension.sh    Builds the popup and zips the extension for the store
+popup/                   React app (the popup UI)
+  src/
+    llm/                LLM client + model registry (OpenRouter)
+    actions/            Cover-letter flow + resume PDF generation
+    components/         Job tracker, action buttons, settings
+    prompts/            Prompt templates (copied into dist/prompts on build)
+    storage.ts          chrome.storage.sync for CV, API key, model
+    utils.ts            Prompt loading, tag parsing, downloads
+  dist/                  Build output (referenced by the manifest)
+```
 
-4. **Cover Letter Generation**:
+## Getting started (development)
 
-   - Drafts personalized cover letters using OpenAI's GPT API.
-   - Grades job opportunities and provides a match score to help users prioritize applications.
+Requirements: a recent Node.js and an [OpenRouter API key](https://openrouter.ai/keys).
 
-5. **Google Sheets Integration**:
-   - Saves job application details, including cover letters and match scores, to a Google Sheet for tracking purposes.
+```bash
+cd popup
+npm install
+npm run dev     # dev server (enables a debug bypass via VITE_DEBUG_MODE)
+```
 
-## Technical Details
+To build the popup:
 
-### Manifest
+```bash
+cd popup
+npm run build   # outputs to popup/dist
+```
 
-- The extension uses Manifest V3.
-- Permissions include `activeTab`, `storage`, and `scripting`.
-- Content scripts are injected into LinkedIn job pages to extract job data.
+### Load the extension in Chrome
 
-### Frontend
+1. Build the popup (above) so `popup/dist` exists.
+2. Go to `chrome://extensions`, enable **Developer mode**.
+3. Click **Load unpacked** and select the **repository root** (the folder
+   containing `manifest.json`).
 
-- Built with React and TypeScript.
-- Uses Ant Design for UI components.
-- Vite is used as the build tool.
+### Configure
 
-### Backend Logic
+Open the extension popup → **Settings**, paste your **OpenRouter API key**, and
+pick a **model**. No `.env` file is needed — the key is entered by the user and
+stored in `chrome.storage.sync`.
 
-- Content scripts (`content.js`) handle job data extraction.
-- Background scripts (`background.js`) manage communication with OpenAI's GPT API.
-- Utility functions handle tasks like text extraction, API calls, and PDF generation.
+## Packaging for the Chrome Web Store
 
-### Prompts
+```bash
+./package-extension.sh
+```
 
-- The extension uses predefined text prompts stored in the `src/prompts` directory to interact with OpenAI's GPT API.
-- Prompts are dynamically populated with user data and job descriptions.
+This builds the popup and produces `waddy-extension.zip` containing only the
+runtime files (`manifest.json`, `background.js`, `content.js`, `small_logo.png`,
+and `popup/dist`). Bump `"version"` in `manifest.json` before uploading a new
+build. The zip is git-ignored.
 
-### Storage
+## Privacy
 
-- Chrome's sync storage is used to store CV data.
-- Local storage is used as a fallback.
-
-### Dependencies
-
-- `react`, `react-dom`, `antd`: For building the user interface.
-- `pdf-lib`, `pdfjs-dist`: For handling PDF uploads and text extraction.
-- `vite-plugin-static-copy`: For copying prompt files to the build directory.
-
-## File Structure
-
-### Root Directory
-
-- `manifest.json`: Defines the extension's metadata and permissions.
-- `background.js`: Handles background tasks and communication with OpenAI.
-- `content.js`: Extracts job data from LinkedIn pages.
-
-### Popup Directory
-
-- `src/`: Contains the source code for the popup interface.
-  - `components/`: React components for the job tracker and action buttons.
-  - `prompts/`: Text prompts for OpenAI interactions.
-  - `utils.ts`: Utility functions for API calls and text processing.
-  - `storage.ts`: Handles CV data storage.
-  - `download.ts`: Generates tailored CVs as PDFs.
-
-### Build Configuration
-
-- `vite.config.ts`: Configures the Vite build tool.
-- `tsconfig.json`: TypeScript configuration files.
-
-## How It Works
-
-1. **Job Data Extraction**:
-
-   - When a user visits a LinkedIn job page, the content script extracts job details and sends them to the popup interface.
-
-2. **CV Upload**:
-
-   - Users upload their CVs in the popup interface.
-   - The CV is parsed, converted to JSON, and stored locally.
-
-3. **Tailored CV Generation**:
-
-   - Users click a button to generate a tailored CV for the job.
-   - The extension sends the CV and job description to OpenAI's GPT API and receives a tailored CV in response.
-
-4. **Cover Letter Generation**:
-
-   - Users can generate a cover letter for the job using a similar process.
-
-5. **Job Tracking**:
-   - Job details, tailored CVs, and cover letters are saved to a Google Sheet for tracking.
-
-## Future Enhancements
-
-- Support for additional job boards beyond LinkedIn.
-- Enhanced analytics for job tracking.
-- Integration with other productivity tools like Trello or Notion.
-
-## Getting Started
-
-### Installation
-
-1. Clone the repository.
-2. Run `npm install` to install dependencies.
-3. Run `npm run dev` to start the development server.
-4. Load the extension in Chrome:
-   - Go to `chrome://extensions`.
-   - Enable "Developer mode".
-   - Click "Load unpacked" and select the `dist` directory.
-
-### Usage
-
-1. Navigate to a LinkedIn job posting.
-2. Open the extension popup.
-3. Upload your CV and generate tailored CVs and cover letters.
-4. Save job details to Google Sheets.
-
----
-
-This documentation provides a high-level overview of the "Land Your Job" Chrome extension. For detailed implementation, refer to the source code.
+Waddy operates no server and never receives your data. Your CV, API key, and job
+data stay in your browser; the only external requests are to OpenRouter, using
+your own key. Full details in [`PRIVACY.md`](./PRIVACY.md).
