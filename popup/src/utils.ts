@@ -8,6 +8,10 @@ export const downloadText = (text: string, filename: string) => {
   document.body.removeChild(a);
 };
 
+// Turn "Jane Doe" / "Acme, Inc." into filename-safe parts: "Jane_Doe" / "Acme_Inc".
+export const toFileNamePart = (value: string) =>
+  value.trim().replace(/\s+/g, "_").replace(/[^\w-]/g, "");
+
 export const extractTextBetweenTags = (text: string, tag: string) => {
   const regex = new RegExp(`<${tag}>(.*?)</${tag}>`, "s"); // "s" flag allows multi-line matches
   const match = text.match(regex);

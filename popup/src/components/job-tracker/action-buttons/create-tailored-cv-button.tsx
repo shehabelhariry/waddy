@@ -52,7 +52,7 @@ export default function CreateTailoredCVButton({
               extractTextBetweenTags(resp, "new_cv") || "{}"
             );
 
-            await generateResumePdf(resume);
+            await generateResumePdf(resume, jobData?.company);
           } catch (err) {
             console.error("Tailored CV generation failed:", err);
             alert(
@@ -62,7 +62,7 @@ export default function CreateTailoredCVButton({
 
           // 2) Cover letter — independent; handleCoverLetter has its own error
           // handling and downloads the letter.
-          await handleCoverLetter(jobData!, () => {}, () => {});
+          await handleCoverLetter(jobData!, () => {}, () => {}, cvObject?.name);
         } finally {
           setIsAiLoading(false);
         }

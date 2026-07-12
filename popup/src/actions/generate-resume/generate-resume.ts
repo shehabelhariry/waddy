@@ -2,9 +2,10 @@
 
 import { COLORS } from "./const";
 import { CV } from "./types";
+import { toFileNamePart } from "../../utils";
 
 // Example function to generate CV PDF
-export const generateResumePdf = async (cv: CV) => {
+export const generateResumePdf = async (cv: CV, company?: string) => {
   // Lazy-load pdfmake (+ its embedded fonts, ~1MB) only when actually
   // generating a PDF, so it stays out of the popup's initial bundle.
   // @ts-ignore
@@ -156,7 +157,9 @@ export const generateResumePdf = async (cv: CV) => {
   };
 
   // Generate the PDF
+  const namePart = toFileNamePart(cv.name);
+  const companyPart = company ? `_${toFileNamePart(company)}` : "";
   pdfMake
     .createPdf(docDefinition)
-    .download(`${cv.name.replace(/\s/g, "_")}_CV.pdf`);
+    .download(`${namePart}${companyPart}_resume.pdf`);
 };

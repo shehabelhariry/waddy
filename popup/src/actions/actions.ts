@@ -1,5 +1,10 @@
 import { JobData } from "../types";
-import { downloadText, extractTextBetweenTags, loadPrompt } from "../utils";
+import {
+  downloadText,
+  extractTextBetweenTags,
+  loadPrompt,
+  toFileNamePart,
+} from "../utils";
 import { callLLM } from "../llm/client";
 import { cvSample } from "../baseCV";
 
@@ -23,7 +28,8 @@ export const getCvJsonFromExtractedText = async (extractedText: string) => {
 export const handleCoverLetter = async (
   jobData: JobData,
   setLoading: Function,
-  setMatchScore: Function
+  setMatchScore: Function,
+  applicantName?: string
 ) => {
   if (!jobData) return;
 
@@ -46,7 +52,11 @@ export const handleCoverLetter = async (
 
     setMatchScore(score);
 
-    downloadText(letter, `${jobData.company}.txt`);
+    const namePart = applicantName ? `${toFileNamePart(applicantName)}_` : "";
+    downloadText(
+      letter,
+      `${namePart}${toFileNamePart(jobData.company)}_cover_letter.txt`
+    );
   } catch (err) {
     console.error("Cover letter generation failed:", err);
     alert(
