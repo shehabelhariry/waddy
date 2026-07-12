@@ -1,3 +1,8 @@
+---
+title: Privacy Policy for Waddy
+permalink: /privacy/
+---
+
 # Privacy Policy for Waddy
 
 **Last updated: July 12, 2026**
@@ -81,4 +86,4 @@ updating the "Last updated" date above.
 
 ## Contact
 
-If you have questions about this policy, contact: **[your contact email]**
+If you have questions about this policy, contact: **cheha6@gmail.com**
